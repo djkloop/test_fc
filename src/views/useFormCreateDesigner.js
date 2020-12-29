@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2020-12-29 20:19:04
- * @LastEditors: yeyuhang
+ * @LastEditTime  : 2020-12-29 20:34:00
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useResetForceUpdate } from "./useUtils"
@@ -27,6 +27,7 @@ const _useCloneItem = item => {
         const onlyField = useAutoField();
         cloneItem["field"] = onlyField;
         cloneItem["title"] = onlyField;
+        cloneItem["name"] = onlyField;
         cloneItem["id"] = onlyField;
         cloneItem['prev_field'] = item.field
     }
@@ -51,6 +52,7 @@ const useSetActiveItem = (item) => {
 const useCommonWrapper = item => {
     return {
         type: 'div',
+        name: useAutoField(),
         class: classnames('form-create-designer-widget__item'),
         children: [item]
     }
@@ -71,7 +73,6 @@ export const useNavCloneItem = (item) => {
             break;
     }
     cloneItem = useCommonWrapper(cloneItem)
-    useSetActiveItem(cloneItem);
     return cloneItem;
 };
 
@@ -101,7 +102,10 @@ export const useInitDraggableItem = () => {
             },
         ],
         on: {
-            change: _useChangeItem
+            change: _useChangeItem,
+            add : (e) => {
+                useSetActiveItem(e.item._underlying_vm_)
+            }
         },
     });
     /// 初始化的时候需要一个空的拖拽列表

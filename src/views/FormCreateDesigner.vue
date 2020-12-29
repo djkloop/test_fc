@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-29 19:10:43
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2020-12-29 21:32:04
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
+ * @FilePath     : /test_fc/src/views/FormCreateDesigner.vue
 -->
 <style lang="scss">
 @import '@/assets/reset.sass';
@@ -47,6 +47,7 @@
                 class="form-create-designer-widget__label"
                 :key="item.id"
                 v-for="item in components"
+                @click="useNavClickCloneItem(item)"
               >
                 <a>
                   <i class="icon"></i>
@@ -73,7 +74,13 @@
 <script>
 import { getCurrentInstance, toRefs, watch } from "@vue/composition-api";
 import { useStateWithNav, useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
-import { useNavCloneItem, useInitDraggableItem, useSetEmptyStatus, useSetVM } from "./useFormCreateDesigner";
+import { 
+  useNavCloneItem, 
+  useNavClickCloneItem,
+  useInitDraggableItem, 
+  useSetEmptyStatus, 
+  useSetVM
+} from "./useFormCreateDesigner";
 export default {
   name: "FormCreateDesigner",
   components: {
@@ -81,11 +88,11 @@ export default {
   },
   setup() {
     const { proxy } = getCurrentInstance()
-    ///
+    /// 初始化item
     useInitDraggableItem()
-    ///
+    /// 设置当前的上下文 vm
     useSetVM(proxy)
-    ///
+    /// hack bug
     watch(() => useStateWithDraggables.mainList, (v) => {
       useSetEmptyStatus(v.length === 0)
     }, {
@@ -97,7 +104,9 @@ export default {
       ...toRefs(useStateWithNav),
       ...toRefs(useStateWithDraggables),
       ...toRefs(useStateWithPage),
-      useNavCloneItem
+      /// events
+      useNavCloneItem,
+      useNavClickCloneItem
     };
   },
 };

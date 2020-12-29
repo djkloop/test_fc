@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-29 20:34:00
- * @LastEditors   : djkloop
+ * @LastEditTime : 2020-12-29 22:45:02
+ * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useResetForceUpdate } from "./useUtils"
@@ -45,10 +45,13 @@ const _useChangeItem = ({ removed }) => {
     }
 }
 
+/// 当前页面激活的item
 const useSetActiveItem = (item) => {
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
+    useStateWithPage.activeItem = cloneDeep(item)
 }
 
+/// 统一的外层样式标签
 const useCommonWrapper = item => {
     return {
         type: 'div',
@@ -59,7 +62,7 @@ const useCommonWrapper = item => {
 }
 
 /// 左侧列表拖拽触发clone事件
-export const useNavCloneItem = (item) => {
+export const useNavCloneItem = item => {
     let cloneItem = cloneDeep(item);
     useUniqueId(cloneItem);
     switch (cloneItem.lib_type) {
@@ -75,6 +78,29 @@ export const useNavCloneItem = (item) => {
     cloneItem = useCommonWrapper(cloneItem)
     return cloneItem;
 };
+
+/// 点击左侧列表触发的事件
+export const useNavClickCloneItem = item => {
+    /// 如果当前没有被激活的item说明是主区域没有任何元素
+    const cloneItem = useNavCloneItem(item)
+    if (!useStateWithPage.activeItem) {
+        useStateWithDraggables.mainList.push(cloneItem)
+    } else {
+        /// 否则就在当前激活的activeItem后面添加
+        useStateWithFormCreate.fApi.append(cloneItem, useStateWithPage.activeItem.name)
+        console.log(useStateWithFormCreate.fApi.getRule(useStateWithPage.activeItem.name), ' <- after')
+        /// 删除上一个激活的activeItem类名
+        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
+            class: classnames('form-create-designer-widget__item')
+        })
+        /// 获取上一个activeItem的规则
+        console.log(useStateWithFormCreate.fApi.getRule(useStateWithPage.activeItem.name))
+    }
+    /// 保证动画执行正确
+    setTimeout(() => {
+        useSetActiveItem(cloneItem)
+    }, 16)
+}
 
 /// 初始化生成中间区域
 export const useInitDraggableItem = () => {

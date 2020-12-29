@@ -77,13 +77,13 @@
     &__item {
       position: relative;
       background: linear-gradient(to right, rgb(129, 237, 192, 0.2), rgb(0, 147, 243, 0.2));
+      overflow: hidden;
       &::before {
         content: "";
-        height: 8px;
+        height: 7px;
         width: 100%;
         background: transparent;
         position: absolute;
-        -webkit-transition: all .3s;
         transition: all .3s;
         top: 0;
         right: -100%;
@@ -91,7 +91,7 @@
       &__active {
         background: linear-gradient(to right, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
         &::before{
-          background-color: red;
+          background: linear-gradient(to left, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
           right: 0;
         }
       }

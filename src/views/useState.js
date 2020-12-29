@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2020-12-29 20:31:36
- * @LastEditors   : djkloop
+ * @LastEditTime : 2020-12-29 21:55:07
+ * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
 import { reactive } from "@vue/composition-api"
@@ -47,7 +47,8 @@ export const useStateWithFormCreate = reactive({
 
 export const useStateWithPage = reactive({
     isShowEmpty: true,
-    vm: null
+    vm: null,
+    activeItem: null
 })
 
 export const useStateWithDraggables = reactive({

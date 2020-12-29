@@ -1,0 +1,82 @@
+.form-create-designer {
+  padding: 0;
+  margin: 0;
+
+  /// 主区域相关的样式
+  &-main {
+    background: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #f8f8f8;
+    width: calc(100vw - 700px);
+    height: calc(100vh - 60px);
+
+    &__draggable {
+      height: 100%;
+
+      &__list {
+        height: 100%;
+      }
+    }
+  }
+
+  /// 左侧列表的相关样式
+  &-widget {
+    &__list {
+      padding: 8px 0;
+      width: 100%;
+      height: 100%;
+      ul {
+        overflow: hidden;
+        padding: 0 10px 10px;
+        margin: 0;
+      }
+    }
+
+    &__label {
+      font-size: 12px;
+      display: block;
+      width: calc(50% - 20px);
+      line-height: 26px;
+      left: 0;
+      float: left;
+      position: relative;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin: 10px;
+      color: #333;
+      text-align: center;
+      border: 1px solid #f4f6fc;
+      & > a {
+        display: block;
+        cursor: move;
+        background: #f4f6fc;
+        border: 1px solid #f4f6fc;
+        span {
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+      &:hover {
+        color: #409eff;
+        border: 1px dashed #409eff;
+      }
+    }
+  }
+
+  .fc {
+    &-drag {
+      &-grid {
+        &-row {
+          .fc-drag-grid-box,
+          .fc-drag-list {
+            min-height: 60px;
+            border: 1px dashed #d9d9d9;
+            background: white;
+          }
+        }
+      }
+    }
+  }
+}
+

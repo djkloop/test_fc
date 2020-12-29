@@ -1,15 +1,16 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-29 16:29:28
+ * @LastEditTime  : 2020-12-29 18:52:07
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
-import { useAutoField, useUniqueId } from "./useUtils"
+import { useAutoField, useUniqueId, useResetForceUpdate } from "./useUtils"
 import { cloneDeep } from "lodash";
-import { useStateWithDraggables, useStateWithFormCreate } from "./useState";
+import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
 import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
+
 
 
 /// clone 时触发的事件
@@ -61,7 +62,7 @@ export const useNavCloneItem = (item) => {
 
 /// 初始化生成中间区域
 export const useInitDraggableItem = () => {
-    const a = reactive({
+    const initItem = reactive({
         type: "draggable",
         props: {
             list: useStateWithDraggables.mainList,
@@ -71,7 +72,7 @@ export const useInitDraggableItem = () => {
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
         },
-        class: "fc-drag-main",
+        class: "form-create-designer-main__draggable",
         children: [
             {
                 type: "transition-group",
@@ -79,7 +80,7 @@ export const useInitDraggableItem = () => {
                     name: "fc-drag-list",
                     tag: "div",
                 },
-                class: "fc-drag-transition",
+                class: "form-create-designer-main__draggable__list",
                 children: useStateWithDraggables.mainList,
                 native: true,
             },
@@ -89,7 +90,7 @@ export const useInitDraggableItem = () => {
         },
     });
     /// 初始化的时候需要一个空的拖拽列表
-    useStateWithFormCreate.rules.push(a);
+    useStateWithFormCreate.rules.push(initItem);
 }
 
 
@@ -126,3 +127,13 @@ export const useWrapperDrag = () => {
         },
     };
 };
+
+/// 设置全局上下文
+export const useSetVM = vm => useStateWithPage.vm = vm
+
+export const useSetEmptyStatus = (isShow) => {
+    useStateWithPage.isShowEmpty = isShow
+    useResetForceUpdate(useStateWithPage.vm)
+}
+
+

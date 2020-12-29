@@ -1,8 +1,8 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-21 18:22:07
+ * @LastEditors: yeyuhang
+ * @LastEditTime: 2020-12-29 15:44:58
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/views/Home.vue
 -->
@@ -104,7 +104,7 @@ ul {
           <draggable
             :list="components"
             tag="ul"
-            v-bind="draggableOptions"
+            v-bind="draggableNavOptions"
             :clone="useFormatDragItem"
           >
             <li
@@ -130,207 +130,21 @@ ul {
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, ref } from "@vue/composition-api";
-import { cloneDeep, uniqueId } from "lodash";
-import classnames from "classnames";
-
+import { defineComponent, toRefs } from "@vue/composition-api";
+import { useStateWithNav, useStateWithDraggables, useStateWithFormCreate } from "./useState";
+import { useFormatDragItem, useInitDraggableItem } from "./useFormCreateDesigner";
 export default defineComponent({
   name: "Home",
   components: {
     formCreate: window.formCreate.$form(),
   },
   setup() {
-    const navStates = reactive({
-      components: [
-        {
-          id: 1,
-          label: "el-row",
-          lib_type: "row",
-        },
-        {
-          id: 2,
-          label: "el-input",
-          lib_type: "input",
-        },
-      ],
-      draggableOptions: {
-        group: { name: "dragGroup", pull: "clone", put: false },
-        sort: false,
-        animation: 180,
-        draggable: ".form-widget-label",
-        ghostClass: "moving",
-      },
-    });
-
-    const formStates = reactive({
-      fApi: {},
-      rules: [],
-      options: {
-        submitBtn: false,
-        resetBtn: false,
-      },
-    });
-
-    const draggableOptions = ref({
-      group: "dragGroup",
-      ghostClass: "fc-drage-moving",
-      animation: 180,
-    });
-
-    /// generate unique id
-    const useUniqueId = (item) => {
-      item._id = uniqueId("drag_key_id_");
-    };
-
-    /// generate field
-    const useAutoField = () => {
-      return "field_" + Math.random().toString(36).substring(3, 11);
-    };
-
-    /// common wrapper drag item
-    const useWrapperDrag = () => {
-      const otherList = ref([]);
-      return {
-        type: "draggable",
-        props: {
-          list: otherList.value,
-          tag: "div",
-        },
-        attrs: {
-          ...draggableOptions.value,
-          clone: item => {
-            /******************************************* */
-            /* clone 的时候一定要深拷贝 要不然一堆bug         */
-            /******************************************* */
-            const cloneItem = cloneDeep(item)
-            const onlyField = useAutoField();
-            cloneItem["field"] = onlyField;
-            cloneItem["title"] = onlyField;
-            cloneItem["id"] = onlyField;
-            console.log(cloneItem, " other-clone");
-            return cloneItem
-          }
-        },
-        class: "fc-drag-main fc-drag-grid-box",
-        children: [
-          {
-            type: "transition-group",
-            props: {
-              name: "fc-drag-list",
-              tag: "div",
-            },
-            class: "fc-drag-transition fc-drag-list",
-            children: otherList.value,
-            native: true,
-          },
-        ],
-        on: {
-          start: () => {
-            console.log(' <------')
-            return false
-          },
-          add: (item) => {
-            console.log(item, " other-add");
-            return false
-          },
-          change:() => {
-            console.log('__-change')
-            return false
-          },
-        },
-      };
-    };
-
-    /// transfer - row
-    const useRow = (item) => {
-      item["type"] = "el-row";
-      item["class"] = classnames("fc-drag-grid-row");
-      item["children"] = [
-        {
-          type: "el-col",
-          props: { span: 12 },
-          children: [useWrapperDrag()],
-        },
-        {
-          type: "el-col",
-          props: { span: 12 },
-          children: [useWrapperDrag()],
-        },
-      ];
-    };
-
-    /// transfer - input
-    const useInput = (item) => {
-      item["type"] = "el-input";
-      const onlyField = useAutoField();
-      item["field"] = onlyField;
-      item["title"] = onlyField;
-      item["id"] = onlyField;
-    };
-
-    /// format rules
-    const useFormatDragItem = (item) => {
-      const cloneItem = cloneDeep(item);
-      useUniqueId(cloneItem);
-      switch (cloneItem.lib_type) {
-        case "row":
-          useRow(cloneItem);
-          break;
-        case "input":
-          useInput(cloneItem);
-          break;
-        default:
-          break;
-      }
-      return cloneItem;
-    };
-
-    /// main data list
-    const baseList = ref([]);
-    const draggableMainOptions = ref({
-      group: "dragGroup",
-      ghostClass: "fc-drage-moving",
-      animation: 180,
-    });
-    /// init draggable component
-    const initDraggableItem = reactive({
-      type: "draggable",
-      props: {
-        list: baseList.value,
-        tag: "div",
-      },
-      attrs: {
-        ...draggableMainOptions.value,
-      },
-      class: "fc-drag-main",
-      children: [
-        {
-          type: "transition-group",
-          props: {
-            name: "fc-drag-list",
-            tag: "div",
-          },
-          class: "fc-drag-transition",
-          children: baseList.value,
-          native: true,
-        },
-      ],
-      on: {
-        add: () => {
-          console.log(baseList.value, " main-add");
-          console.log(baseList, " lllll");
-        },
-        clone: () => {
-          console.log(baseList.value, " main-clone");
-        },
-      },
-    });
-    formStates.rules.push(initDraggableItem);
-
+    useInitDraggableItem()
     return {
-      ...toRefs(formStates),
-      ...toRefs(navStates),
-      useFormatDragItem,
+      ...toRefs(useStateWithFormCreate),
+      ...toRefs(useStateWithNav),
+      ...toRefs(useStateWithDraggables),
+      useFormatDragItem
     };
   },
 });

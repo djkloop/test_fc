@@ -66,7 +66,6 @@
     &__row {
       padding: 8px;
       min-height: 60px;
-      background: linear-gradient(to right, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
     }
     &__col {
       min-height: 60px;
@@ -77,13 +76,10 @@
 
     &__item {
       position: relative;
+      background: linear-gradient(to right, rgb(129, 237, 192, 0.2), rgb(0, 147, 243, 0.2));
     }
     &__active {
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 2;
-      background: red;
+      background: linear-gradient(to right, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
     }
   }
 

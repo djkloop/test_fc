@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-29 19:25:53
+ * @LastEditTime  : 2020-12-29 20:03:09
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -10,7 +10,7 @@ import { cloneDeep } from "lodash";
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
 import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
-import classNames from 'classnames'
+import classnames from 'classnames'
 
 
 
@@ -44,19 +44,22 @@ const _useChangeItem = ({ removed }) => {
     }
 }
 
-const useCommonClass = (item) => {
-    item.class = classNames(item.class, 'form-create-designer-widget__item')
+const useSetActiveItem = (item) => {
+    item['class'] = classnames(item['class'], 'form-create-designer-widget__active')
 }
 
-const useSetActiveItem = (item) => {
-    item['class'] = classNames(item['class'], 'form-create-designer-widget__active')
+const useCommonWrapper = item => {
+    return {
+        type: 'div',
+        class: classnames('form-create-designer-widget__item'),
+        children: [item]
+    }
 }
 
 /// 左侧列表拖拽触发clone事件
 export const useNavCloneItem = (item) => {
-    const cloneItem = cloneDeep(item);
+    let cloneItem = cloneDeep(item);
     useUniqueId(cloneItem);
-    useCommonClass(cloneItem);
     useSetActiveItem(cloneItem);
     switch (cloneItem.lib_type) {
         case "row":
@@ -68,6 +71,7 @@ export const useNavCloneItem = (item) => {
         default:
             break;
     }
+    cloneItem = useCommonWrapper(cloneItem)
     return cloneItem;
 };
 

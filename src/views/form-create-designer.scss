@@ -77,9 +77,24 @@
     &__item {
       position: relative;
       background: linear-gradient(to right, rgb(129, 237, 192, 0.2), rgb(0, 147, 243, 0.2));
-    }
-    &__active {
-      background: linear-gradient(to right, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
+      -webkit-transition: all .3s;
+      transition: all .3s;
+      &::before {
+        content: "";
+        height: 8px;
+        width: 100%;
+        background: transparent;
+        position: absolute;
+        top: 0;
+        right: -100%;
+      }
+      &__active {
+        background: linear-gradient(to right, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
+        &::before{
+          background-color: red;
+          right: 0;
+        }
+      }
     }
   }
 

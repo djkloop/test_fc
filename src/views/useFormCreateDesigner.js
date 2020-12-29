@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-29 20:03:09
- * @LastEditors   : djkloop
+ * @LastEditTime: 2020-12-29 20:19:04
+ * @LastEditors: yeyuhang
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useResetForceUpdate } from "./useUtils"
@@ -45,7 +45,7 @@ const _useChangeItem = ({ removed }) => {
 }
 
 const useSetActiveItem = (item) => {
-    item['class'] = classnames(item['class'], 'form-create-designer-widget__active')
+    item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
 }
 
 const useCommonWrapper = item => {
@@ -60,7 +60,6 @@ const useCommonWrapper = item => {
 export const useNavCloneItem = (item) => {
     let cloneItem = cloneDeep(item);
     useUniqueId(cloneItem);
-    useSetActiveItem(cloneItem);
     switch (cloneItem.lib_type) {
         case "row":
             useTransferRow(cloneItem);
@@ -72,6 +71,7 @@ export const useNavCloneItem = (item) => {
             break;
     }
     cloneItem = useCommonWrapper(cloneItem)
+    useSetActiveItem(cloneItem);
     return cloneItem;
 };
 

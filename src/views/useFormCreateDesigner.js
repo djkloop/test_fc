@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2020-12-29 15:50:49
- * @LastEditors: yeyuhang
+ * @LastEditTime  : 2020-12-29 16:29:28
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId } from "./useUtils"
@@ -12,27 +12,9 @@ import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
 
 
-/// format rules
-export const useFormatDragItem = (item) => {
-    const cloneItem = cloneDeep(item);
-    useUniqueId(cloneItem);
-    switch (cloneItem.lib_type) {
-        case "row":
-            useTransferRow(cloneItem);
-            break;
-        case "input":
-            useTransferInput(cloneItem);
-            break;
-        default:
-            break;
-    }
-    return cloneItem;
-};
-
-
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
-const useCloneItem = item => {
+const _useCloneItem = item => {
     /******************************************* */
     /* clone 的时候一定要深拷贝 要不然一堆bug         */
     /******************************************* */
@@ -52,7 +34,7 @@ const useCloneItem = item => {
 
 /// change 时触发的事件
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
-const useChangeItem = ({ removed }) => {
+const _useChangeItem = ({ removed }) => {
     if (removed) {
         if (removed.element && removed.element.field) {
             useStateWithFormCreate.fApi.removeField(removed.element.field)
@@ -60,6 +42,22 @@ const useChangeItem = ({ removed }) => {
     }
 }
 
+/// 左侧列表拖拽触发clone事件
+export const useNavCloneItem = (item) => {
+    const cloneItem = cloneDeep(item);
+    useUniqueId(cloneItem);
+    switch (cloneItem.lib_type) {
+        case "row":
+            useTransferRow(cloneItem);
+            break;
+        case "input":
+            useTransferInput(cloneItem);
+            break;
+        default:
+            break;
+    }
+    return cloneItem;
+};
 
 /// 初始化生成中间区域
 export const useInitDraggableItem = () => {
@@ -68,7 +66,7 @@ export const useInitDraggableItem = () => {
         props: {
             list: useStateWithDraggables.mainList,
             tag: "div",
-            clone: useCloneItem
+            clone: _useCloneItem
         },
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
@@ -87,12 +85,12 @@ export const useInitDraggableItem = () => {
             },
         ],
         on: {
-            change: useChangeItem
+            change: _useChangeItem
         },
     });
     /// 初始化的时候需要一个空的拖拽列表
     useStateWithFormCreate.rules.push(a);
-} 
+}
 
 
 /// nested 组件规则
@@ -105,7 +103,7 @@ export const useWrapperDrag = () => {
         props: {
             list: otherList.value,
             tag: "div",
-            clone: useCloneItem,
+            clone: _useCloneItem,
         },
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
@@ -124,7 +122,7 @@ export const useWrapperDrag = () => {
             },
         ],
         on: {
-            change: useChangeItem
+            change: _useChangeItem
         },
     };
 };

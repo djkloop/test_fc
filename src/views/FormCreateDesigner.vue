@@ -1,8 +1,8 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors: yeyuhang
- * @LastEditTime: 2020-12-29 15:44:58
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2020-12-29 16:26:48
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/views/Home.vue
 -->
@@ -105,7 +105,7 @@ ul {
             :list="components"
             tag="ul"
             v-bind="draggableNavOptions"
-            :clone="useFormatDragItem"
+            :clone="useNavCloneItem"
           >
             <li
               class="form-widget-label"
@@ -132,9 +132,9 @@ ul {
 <script>
 import { defineComponent, toRefs } from "@vue/composition-api";
 import { useStateWithNav, useStateWithDraggables, useStateWithFormCreate } from "./useState";
-import { useFormatDragItem, useInitDraggableItem } from "./useFormCreateDesigner";
+import { useNavCloneItem, useInitDraggableItem } from "./useFormCreateDesigner";
 export default defineComponent({
-  name: "Home",
+  name: "FormCreateDesigner",
   components: {
     formCreate: window.formCreate.$form(),
   },
@@ -144,7 +144,7 @@ export default defineComponent({
       ...toRefs(useStateWithFormCreate),
       ...toRefs(useStateWithNav),
       ...toRefs(useStateWithDraggables),
-      useFormatDragItem
+      useNavCloneItem
     };
   },
 });

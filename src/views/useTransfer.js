@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime: 2020-12-29 15:47:45
- * @LastEditors: yeyuhang
+ * @LastEditTime  : 2020-12-29 19:27:04
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField } from "./useUtils"
@@ -28,16 +28,18 @@ export const useTransferInput = (item) => {
 /// 例如form-create需要唯一的field
 export const useTransferRow = (item) => {
     item["type"] = "el-row";
-    item["class"] = classnames("fc-drag-grid-row");
+    item["class"] = classnames(item.class, "form-create-designer-widget__row");
     item["children"] = [
         {
         type: "el-col",
         props: { span: 12 },
+        class: classnames("form-create-designer-widget__col"),
         children: [useWrapperDrag()],
         },
         {
         type: "el-col",
         props: { span: 12 },
+        class: classnames("form-create-designer-widget__col"),
         children: [useWrapperDrag()],
         },
     ];

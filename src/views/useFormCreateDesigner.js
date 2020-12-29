@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-29 18:52:07
+ * @LastEditTime  : 2020-12-29 19:25:53
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -10,6 +10,7 @@ import { cloneDeep } from "lodash";
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
 import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
+import classNames from 'classnames'
 
 
 
@@ -43,10 +44,20 @@ const _useChangeItem = ({ removed }) => {
     }
 }
 
+const useCommonClass = (item) => {
+    item.class = classNames(item.class, 'form-create-designer-widget__item')
+}
+
+const useSetActiveItem = (item) => {
+    item['class'] = classNames(item['class'], 'form-create-designer-widget__active')
+}
+
 /// 左侧列表拖拽触发clone事件
 export const useNavCloneItem = (item) => {
     const cloneItem = cloneDeep(item);
     useUniqueId(cloneItem);
+    useCommonClass(cloneItem);
+    useSetActiveItem(cloneItem);
     switch (cloneItem.lib_type) {
         case "row":
             useTransferRow(cloneItem);
@@ -109,7 +120,7 @@ export const useWrapperDrag = () => {
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
         },
-        class: "fc-drag-main fc-drag-grid-box",
+        class: "form-create-designer-main__draggable fc-drag-grid-box",
         children: [
             {
                 type: "transition-group",
@@ -117,7 +128,7 @@ export const useWrapperDrag = () => {
                     name: "fc-drag-list",
                     tag: "div",
                 },
-                class: "fc-drag-transition fc-drag-list",
+                class: "fc-drag-transition form-create-designer-main__draggable__list",
                 children: otherList.value,
                 native: true,
             },

@@ -19,7 +19,7 @@
     }
   }
 
-  /// 左侧列表的相关样式
+  /// 组件的样式
   &-widget {
     &__list {
       padding: 8px 0;
@@ -62,7 +62,32 @@
         border: 1px dashed #409eff;
       }
     }
+
+    &__row {
+      padding: 8px;
+      min-height: 60px;
+      background: linear-gradient(to right, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
+    }
+    &__col {
+      min-height: 60px;
+      min-width: 50px;
+      border: 1px dashed #ccc;
+      background: #fff;
+    }
+
+    &__item {
+      position: relative;
+    }
+    &__active {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      background: red;
+    }
   }
+
+
 
   .fc {
     &-drag {

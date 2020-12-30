@@ -13,8 +13,16 @@
     &__draggable {
       height: 100%;
 
+      &.form-create-designer-main__draggable__nested {
+        min-height: 60px;
+      }
+
+
       &__list {
         height: 100%;
+        &.form-create-designer-main__draggable__nested__list {
+          min-height: 60px;
+        }
       }
     }
   }
@@ -30,6 +38,7 @@
         padding: 0 10px 10px;
         margin: 0;
       }
+
     }
 
     &__label {
@@ -64,9 +73,9 @@
     }
 
     &__row {
-      padding: 8px;
       min-height: 60px;
     }
+
     &__col {
       min-height: 60px;
       min-width: 50px;
@@ -76,7 +85,7 @@
 
     &__item {
       position: relative;
-      background: linear-gradient(to right, rgb(129, 237, 192, 0.2), rgb(0, 147, 243, 0.2));
+      background: linear-gradient(to right, rgba(129, 237, 192, 0.2), rgba(0, 147, 243, 0.2));
       overflow: hidden;
       &::before {
         content: "";
@@ -88,12 +97,49 @@
         top: 0;
         right: -100%;
       }
+
+      &__tools {
+        position: absolute;
+        right: 0;
+        top: 7px;
+        z-index: 2;
+        padding: 2px;
+        border-bottom-left-radius: 8px;
+        background: rgba(0, 147, 243, 0.2);
+        opacity: 0;
+        pointer-events: none;
+        transition: all .1s;
+        i {
+          font-size: 18px;
+          padding: 3px 10px;
+          color: #fff;
+        }
+      }
+
       &__active {
-        background: linear-gradient(to right, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
+        background: linear-gradient(to right, rgba(129, 237, 192, 0.5), rgba(0, 147, 243, 0.5));
         &::before{
-          background: linear-gradient(to left, rgb(129, 237, 192, 0.5), rgb(0, 147, 243, 0.5));
+          background:rgba(0, 147, 243, 0.5);
           right: 0;
         }
+
+        .form-create-designer-widget__item__tools {
+          opacity: 1;
+          background:rgba(0, 147, 243, 0.5);
+        }
+      }
+
+      &__box {
+        padding: 8px;
+        position: relative;
+      }
+
+      &__key {
+        position: absolute;
+        right: 8px;
+        bottom: 3px;
+        color: #f8f8f8;
+        font-size: 14px;
       }
     }
   }

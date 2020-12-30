@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime : 2020-12-29 21:55:07
- * @LastEditors  : djkloop
+ * @LastEditTime  : 2020-12-30 11:55:53
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { reactive } from "@vue/composition-api"
@@ -23,6 +23,9 @@ export const useStateWithNav = reactive({
             id: 2,
             label: "el-input",
             lib_type: "input",
+            attrs: {
+                readonly: true
+            },
             /// 每个组件的设计相关字段
             design: {
                 type: 'form', /// 属于什么类型的组件
@@ -39,7 +42,8 @@ export const useStateWithFormCreate = reactive({
         submitBtn: false,
         resetBtn: false,
         form: {
-            col: false
+            col: false,
+            size: 'small'
         }
     }
 });

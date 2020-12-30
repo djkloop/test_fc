@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime : 2020-12-29 22:45:02
- * @LastEditors  : djkloop
+ * @LastEditTime  : 2020-12-30 12:19:24
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useResetForceUpdate } from "./useUtils"
@@ -39,6 +39,7 @@ const _useCloneItem = item => {
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
 const _useChangeItem = ({ removed }) => {
     if (removed) {
+        console.log(removed)
         if (removed.element && removed.element.field) {
             useStateWithFormCreate.fApi.removeField(removed.element.field)
         }
@@ -47,8 +48,51 @@ const _useChangeItem = ({ removed }) => {
 
 /// 当前页面激活的item
 const useSetActiveItem = (item) => {
+    if (useStateWithPage.activeItem) {
+        /// 删除上一个激活的activeItem类名
+        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
+            class: classnames('form-create-designer-widget__item')
+        })
+    }
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     useStateWithPage.activeItem = cloneDeep(item)
+}
+
+const useWrapperChildren = item => {
+    const children = []
+    /// 先生成右侧tools区域
+    const rightTools =
+    {
+        type: 'div',
+        class: 'form-create-designer-widget__item__tools',
+        children: [
+            {
+                type: 'i',
+                class: 'el-icon-document-copy'
+            },
+            {
+                type: 'i',
+                class: 'el-icon-delete'
+            }
+        ]
+    }
+    const relayChildren = item
+    children.push(rightTools)
+    children.push(relayChildren)
+    if (item.design.type !== 'layout' ) {
+        const bottomKey = {
+            type: 'div',
+            class: classnames('form-create-designer-widget__item__key'),
+            name: useAutoField(),
+            attrs: {
+              'data-self-id': useAutoField(),
+              'data-component-id': item.field
+            },
+            children: [item.field]
+        }
+        children.push(bottomKey)
+    }
+    return children
 }
 
 /// 统一的外层样式标签
@@ -56,8 +100,14 @@ const useCommonWrapper = item => {
     return {
         type: 'div',
         name: useAutoField(),
+        design: item.design,
         class: classnames('form-create-designer-widget__item'),
-        children: [item]
+        children: [{
+            type: 'div',
+            name: useAutoField(),
+            class: classnames('form-create-designer-widget__item__box'),
+            children: useWrapperChildren(item)
+        }]
     }
 }
 
@@ -88,13 +138,6 @@ export const useNavClickCloneItem = item => {
     } else {
         /// 否则就在当前激活的activeItem后面添加
         useStateWithFormCreate.fApi.append(cloneItem, useStateWithPage.activeItem.name)
-        console.log(useStateWithFormCreate.fApi.getRule(useStateWithPage.activeItem.name), ' <- after')
-        /// 删除上一个激活的activeItem类名
-        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
-            class: classnames('form-create-designer-widget__item')
-        })
-        /// 获取上一个activeItem的规则
-        console.log(useStateWithFormCreate.fApi.getRule(useStateWithPage.activeItem.name))
     }
     /// 保证动画执行正确
     setTimeout(() => {
@@ -154,7 +197,7 @@ export const useWrapperDrag = () => {
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
         },
-        class: "form-create-designer-main__draggable fc-drag-grid-box",
+        class: "form-create-designer-main__draggable form-create-designer-main__draggable__nested",
         children: [
             {
                 type: "transition-group",
@@ -162,13 +205,16 @@ export const useWrapperDrag = () => {
                     name: "fc-drag-list",
                     tag: "div",
                 },
-                class: "fc-drag-transition form-create-designer-main__draggable__list",
+                class: "fc-drag-transition form-create-designer-main__draggable__list form-create-designer-main__draggable__nested__list",
                 children: otherList.value,
                 native: true,
             },
         ],
         on: {
-            change: _useChangeItem
+            change: _useChangeItem,
+            add: (e) => {
+                useSetActiveItem(e.item._underlying_vm_)
+            }
         },
     };
 };

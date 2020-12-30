@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-30 14:30:42
- * @LastEditors   : djkloop
+ * @LastEditTime: 2020-12-30 15:36:17
+ * @LastEditors: yeyuhang
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useResetForceUpdate } from "./useUtils"
@@ -52,8 +52,12 @@ const useSetActiveItem = (item) => {
         useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
             class: classnames('form-create-designer-widget__item')
         })
+        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.children[0].children[0].name, {
+            class: classnames('form-create-designer-widget__item__tools')
+        })
     }
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
+    item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
     useStateWithPage.activeItem = cloneDeep(item)
 }
 

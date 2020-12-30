@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-30 13:13:14
+ * @LastEditTime  : 2020-12-30 14:30:42
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -28,6 +28,8 @@ const _useCloneItem = item => {
         cloneItem.children[0].children[1]["name"] = onlyField;
         cloneItem.children[0].children[1]["id"] = onlyField;
         cloneItem.children[0].children[1]['prev_field'] = item.field
+        /// 把key也换掉
+        cloneItem.children[0].children[2]['children'] = [onlyField]
     }
     return cloneItem
 }

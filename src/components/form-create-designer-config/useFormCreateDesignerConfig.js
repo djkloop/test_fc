@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:15:20
  * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-30 19:06:40
+ * @LastEditTime  : 2020-12-30 19:16:20
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/useFormCreateDesignerConfig.js
  */
@@ -15,11 +15,11 @@ import { useStateWithPage as MainState, useStateWithFormCreate as MainFormCreate
     item.field = useAutoField()
     item['on'] = {
       'input': e => {
-        const field = MainState.activeItem.children[0].children[0].children[1].field
+        const field = MainState.activeItem.children[0].children[1].field
         MainFormCreate.fApi.updateRule(field, {
           [item.target.params]: {
-            [item.target.property]: e
-          }
+              [item.target.property]: e
+            }
          })
         useResetForceUpdate(MainState.vm)
       }

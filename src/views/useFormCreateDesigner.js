@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-30 12:19:24
+ * @LastEditTime  : 2020-12-30 12:49:02
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -12,8 +12,6 @@ import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
 import classnames from 'classnames'
 
-
-
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
@@ -23,6 +21,7 @@ const _useCloneItem = item => {
     const cloneItem = cloneDeep(item)
     /// 布局组件不需要这些field
     /// 只需要脱离引用关系就行了
+    console.log(item, ' cloneItem')
     if (item.design.type !== 'layout') {
         const onlyField = useAutoField();
         cloneItem["field"] = onlyField;
@@ -37,11 +36,15 @@ const _useCloneItem = item => {
 
 /// change 时触发的事件
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
-const _useChangeItem = ({ removed }) => {
+const _useChangeItem = ({ removed, added }) => {
+    if (added) {
+        console.log(added, ' added')
+    }
     if (removed) {
-        console.log(removed)
-        if (removed.element && removed.element.field) {
-            useStateWithFormCreate.fApi.removeField(removed.element.field)
+        console.log(removed, ' removed')
+        if (removed.element && (removed.element.field || removed.element.name)) {
+            console.log(useStateWithFormCreate.fApi.fields())
+            useStateWithFormCreate.fApi.removeField(removed.element.field || removed.element.name)
         }
     }
 }
@@ -65,6 +68,7 @@ const useWrapperChildren = item => {
     {
         type: 'div',
         class: 'form-create-designer-widget__item__tools',
+        name: useAutoField(),
         children: [
             {
                 type: 'i',
@@ -79,14 +83,16 @@ const useWrapperChildren = item => {
     const relayChildren = item
     children.push(rightTools)
     children.push(relayChildren)
+    /// 如果是表单组件需要生成底部key
     if (item.design.type !== 'layout' ) {
+        const selfId = useAutoField()
         const bottomKey = {
             type: 'div',
             class: classnames('form-create-designer-widget__item__key'),
-            name: useAutoField(),
+            name: selfId,
             attrs: {
-              'data-self-id': useAutoField(),
-              'data-component-id': item.field
+              'data-self-id': selfId,
+              'data-form-item-id': item.field /// 当前对应的form表单组件的id
             },
             children: [item.field]
         }

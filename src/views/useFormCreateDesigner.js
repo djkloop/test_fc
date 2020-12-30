@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-30 13:09:23
+ * @LastEditTime  : 2020-12-30 13:13:14
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -47,7 +47,9 @@ const _useChangeItem = ({ removed }) => {
 const useSetActiveItem = (item) => {
     if (useStateWithPage.activeItem) {
         /// 删除上一个激活的activeItem类名
-        useStateWithFormCreate.fApi.getRule(useStateWithPage.activeItem.name).class = classnames('form-create-designer-widget__item')
+        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
+            class: classnames('form-create-designer-widget__item')
+        })
     }
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     useStateWithPage.activeItem = cloneDeep(item)

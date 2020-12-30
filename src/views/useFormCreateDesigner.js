@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-30 13:08:13
+ * @LastEditTime  : 2020-12-30 13:09:23
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -21,7 +21,6 @@ const _useCloneItem = item => {
     const cloneItem = cloneDeep(item)
     /// 布局组件不需要这些field
     /// 只需要脱离引用关系就行了
-    console.log(item, ' cloneItem')
     if (item.design.type !== 'layout') {
         const onlyField = useAutoField();
         cloneItem.children[0].children[1]["field"] = onlyField;

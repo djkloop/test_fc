@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-30 12:49:02
+ * @LastEditTime  : 2020-12-30 13:08:13
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -24,11 +24,11 @@ const _useCloneItem = item => {
     console.log(item, ' cloneItem')
     if (item.design.type !== 'layout') {
         const onlyField = useAutoField();
-        cloneItem["field"] = onlyField;
-        cloneItem["title"] = onlyField;
-        cloneItem["name"] = onlyField;
-        cloneItem["id"] = onlyField;
-        cloneItem['prev_field'] = item.field
+        cloneItem.children[0].children[1]["field"] = onlyField;
+        cloneItem.children[0].children[1]["title"] = onlyField;
+        cloneItem.children[0].children[1]["name"] = onlyField;
+        cloneItem.children[0].children[1]["id"] = onlyField;
+        cloneItem.children[0].children[1]['prev_field'] = item.field
     }
     return cloneItem
 }
@@ -36,15 +36,10 @@ const _useCloneItem = item => {
 
 /// change 时触发的事件
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
-const _useChangeItem = ({ removed, added }) => {
-    if (added) {
-        console.log(added, ' added')
-    }
+const _useChangeItem = ({ removed }) => {
     if (removed) {
-        console.log(removed, ' removed')
-        if (removed.element && (removed.element.field || removed.element.name)) {
-            console.log(useStateWithFormCreate.fApi.fields())
-            useStateWithFormCreate.fApi.removeField(removed.element.field || removed.element.name)
+        if (removed.element && (removed.element.field)) {
+            useStateWithFormCreate.fApi.removeField(removed.element.field)
         }
     }
 }
@@ -53,9 +48,7 @@ const _useChangeItem = ({ removed, added }) => {
 const useSetActiveItem = (item) => {
     if (useStateWithPage.activeItem) {
         /// 删除上一个激活的activeItem类名
-        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
-            class: classnames('form-create-designer-widget__item')
-        })
+        useStateWithFormCreate.fApi.getRule(useStateWithPage.activeItem.name).class = classnames('form-create-designer-widget__item')
     }
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     useStateWithPage.activeItem = cloneDeep(item)

@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-30 18:31:52
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2020-12-30 22:53:06
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
+ * @FilePath     : /test_fc/src/views/FormCreateDesigner.vue
 -->
 <style lang="scss">
 @import '@/assets/reset.sass';

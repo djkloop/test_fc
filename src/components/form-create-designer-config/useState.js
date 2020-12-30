@@ -1,12 +1,12 @@
 /*
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:13:07
- * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-30 18:46:07
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2020-12-30 22:40:00
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/components/form-create-designer-config/useState.js
+ * @FilePath     : /test_fc/src/components/form-create-designer-config/useState.js
  */
-import {reactive} from "@vue/composition-api";
+import { reactive } from "@vue/composition-api";
 
 export const useStateWithFormCreate = reactive({
   fApi: {},

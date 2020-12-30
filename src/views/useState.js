@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2020-12-30 11:55:53
+ * @LastEditTime  : 2020-12-30 19:07:27
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -24,13 +24,26 @@ export const useStateWithNav = reactive({
             label: "el-input",
             lib_type: "input",
             attrs: {
-                readonly: true
+                readonly: true,
+                placeholder: 'good'
             },
             /// 每个组件的设计相关字段
             design: {
                 type: 'form', /// 属于什么类型的组件
                 name: '输入框'
-            }
+            },
+            config_rule: [
+                {
+                    type: 'el-input',
+                    title: '占位内容',
+                    field: 'fuck_',
+                    value: '',
+                    target: {
+                        params: 'attrs',
+                        property: 'placeholder'
+                    } /// 映射当前组件的key
+                }
+            ]
         },
     ]
 });

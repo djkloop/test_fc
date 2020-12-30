@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-30 14:30:42
+ * @LastEditTime  : 2020-12-30 18:26:19
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -55,6 +55,8 @@ const useSetActiveItem = (item) => {
     }
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     useStateWithPage.activeItem = cloneDeep(item)
+    /// 强制更新下！
+    useResetForceUpdate(useStateWithPage.vm)
 }
 
 const useWrapperChildren = item => {
@@ -103,6 +105,7 @@ const useCommonWrapper = item => {
         type: 'div',
         name: useAutoField(),
         design: item.design,
+        config_rule: item.config_rule,
         class: classnames('form-create-designer-widget__item'),
         children: [{
             type: 'div',

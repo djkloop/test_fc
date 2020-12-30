@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors  : djkloop
- * @LastEditTime : 2020-12-29 21:32:04
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2020-12-30 18:31:52
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/views/FormCreateDesigner.vue
+ * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
 -->
 <style lang="scss">
 @import '@/assets/reset.sass';
@@ -14,17 +14,10 @@
 </style>
 <style lang="scss">
 
-.fc-form,
 .el-form {
   height: 100%;
   & > .el-row {
     height: 100%;
-    .fc-drag-main {
-      height: 100%;
-      .fc-drag-transition {
-        height: 100%;
-      }
-    }
   }
 }
 </style>
@@ -64,7 +57,9 @@
           <form-create v-model="fApi" :rule="rules" :option="options" />
         </el-main>
         <el-aside width="350px">
-          123
+          <div class="form-create-designer-config">
+            <form-create-designer-config :config-json="activeItem" />
+          </div>
         </el-aside>
       </el-container>
     </el-container>
@@ -74,11 +69,11 @@
 <script>
 import { getCurrentInstance, toRefs, watch } from "@vue/composition-api";
 import { useStateWithNav, useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
-import { 
-  useNavCloneItem, 
+import {
+  useNavCloneItem,
   useNavClickCloneItem,
-  useInitDraggableItem, 
-  useSetEmptyStatus, 
+  useInitDraggableItem,
+  useSetEmptyStatus,
   useSetVM
 } from "./useFormCreateDesigner";
 export default {

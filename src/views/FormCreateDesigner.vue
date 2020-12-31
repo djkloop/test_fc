@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
  * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-31 18:03:53
+ * @LastEditTime  : 2020-12-31 18:10:38
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
 -->
@@ -73,13 +73,14 @@ import {
   useNavClickCloneItem,
   useInitDraggableItem,
   useSetEmptyStatus,
-
   useSetVM
 } from "./useFormCreateDesigner";
-import {  useStateWithNav,
+import {
+  useStateWithNav,
   useStateWithDraggables,
   useStateWithFormCreate,
-  useStateWithPage } from './useState'
+  useStateWithPage
+} from './useState'
 
 export default defineComponent({
   name: "FormCreateDesigner",

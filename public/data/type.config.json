@@ -1,0 +1,8 @@
+ {
+   "el-input": [
+     {
+       "type": "el-input",
+       "title": "占位内容"
+     }
+   ]
+ }

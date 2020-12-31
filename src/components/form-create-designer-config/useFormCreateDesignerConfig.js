@@ -1,12 +1,12 @@
 /*
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:15:20
- * @LastEditors  : djkloop
- * @LastEditTime : 2020-12-30 22:57:37
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2020-12-31 18:08:07
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/components/form-create-designer-config/useFormCreateDesignerConfig.js
+ * @FilePath      : /test_fc/src/components/form-create-designer-config/useFormCreateDesignerConfig.js
  */
-import { useAutoField, useResetForceUpdate } from '@/libs/useUtils'
+import { useAutoField } from '@/libs/useUtils'
 import { useStateWithFormCreate, useStateWithPage } from './useState'
 import { useStateWithPage as MainState, useStateWithFormCreate as MainFormCreate } from '@/views/useState'
 
@@ -25,7 +25,6 @@ import { useStateWithPage as MainState, useStateWithFormCreate as MainFormCreate
     }
     return item
   })
-  useResetForceUpdate(useStateWithPage.vm)
  }
 
  export const useSetVM = vm => useStateWithPage.vm = vm

@@ -846,6 +846,11 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@djkloop/fffff_pppp@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@djkloop/fffff_pppp/-/fffff_pppp-0.0.1.tgz#203e299e4a18fd1176f16696134df585108b9a0e"
+  integrity sha512-Ha81en/Ejhoei5vP7oNGbXw1Rikc6QBl7QXrCEoIBDgf1tVgCemNX1ynzlDDDPLnGtH953Jj8SgOi8eDp4jjBw==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.npm.taobao.org/@hapi/address/download/@hapi/address-2.1.4.tgz?cache=0&sync_timestamp=1603524710662&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40hapi%2Faddress%2Fdownload%2F%40hapi%2Faddress-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"

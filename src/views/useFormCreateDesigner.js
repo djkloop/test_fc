@@ -1,11 +1,11 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime : 2020-12-30 21:56:52
- * @LastEditors  : djkloop
+ * @LastEditTime  : 2020-12-31 18:07:57
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
-import { useAutoField, useUniqueId, useResetForceUpdate } from "@/libs/useUtils"
+import { useAutoField, useUniqueId } from "@/libs/useUtils"
 import { cloneDeep } from "lodash";
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
 import { useTransferRow, useTransferInput } from "./useTransfer";
@@ -59,8 +59,6 @@ const useSetActiveItem = (item) => {
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
     useStateWithPage.activeItem = cloneDeep(item)
-    /// 强制更新下！
-    useResetForceUpdate(useStateWithPage.vm)
 }
 
 const useWrapperChildren = item => {
@@ -233,7 +231,6 @@ export const useSetVM = vm => useStateWithPage.vm = vm
 
 export const useSetEmptyStatus = (isShow) => {
     useStateWithPage.isShowEmpty = isShow
-    useResetForceUpdate(useStateWithPage.vm)
 }
 
 

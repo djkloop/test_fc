@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors  : djkloop
- * @LastEditTime : 2020-12-30 22:53:06
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2020-12-31 18:03:53
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/views/FormCreateDesigner.vue
+ * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
 -->
 <style lang="scss">
 @import '@/assets/reset.sass';
@@ -58,7 +58,7 @@
         </el-main>
         <el-aside width="350px">
           <div class="form-create-designer-config">
-            <form-create-designer-config :config-json="activeItem" />
+            <!-- <form-create-designer-config :config-json="activeItem" /> -->
           </div>
         </el-aside>
       </el-container>
@@ -67,20 +67,22 @@
 </template>
 
 <script>
-import { getCurrentInstance, toRefs, watch } from "@vue/composition-api";
-import { useStateWithNav, useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
+import { defineComponent, watch, toRefs, getCurrentInstance } from "@vue/composition-api";
 import {
   useNavCloneItem,
   useNavClickCloneItem,
   useInitDraggableItem,
   useSetEmptyStatus,
+
   useSetVM
 } from "./useFormCreateDesigner";
-export default {
+import {  useStateWithNav,
+  useStateWithDraggables,
+  useStateWithFormCreate,
+  useStateWithPage } from './useState'
+
+export default defineComponent({
   name: "FormCreateDesigner",
-  components: {
-    formCreate: window.formCreate.$form(),
-  },
   setup() {
     const { proxy } = getCurrentInstance()
     /// 初始化item
@@ -93,16 +95,15 @@ export default {
     }, {
       deep: true
     })
-
     return {
       ...toRefs(useStateWithFormCreate),
       ...toRefs(useStateWithNav),
       ...toRefs(useStateWithDraggables),
       ...toRefs(useStateWithPage),
-      /// events
+      // events
       useNavCloneItem,
       useNavClickCloneItem
     };
   },
-};
+});
 </script>

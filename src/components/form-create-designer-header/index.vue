@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-29 16:43:05
  * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-31 19:11:05
+ * @LastEditTime  : 2021-01-04 15:58:08
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-header/index.vue
 -->
@@ -15,7 +15,7 @@
     <div class="form-create-designer-header__wrapper__center">
     </div>
     <div class="form-create-designer-header__wrapper__right">
-      <el-button size="mini" type="primary" :loading="loading" @click="useFetchAllConfigJsonTemplate">全局类型配置json</el-button>
+      <el-button size="mini" type="primary" :loading="loading" @click="useFetchAllConfigJsonTemplate">全局类型配置JSON</el-button>
     </div>
   </div>
 </template>

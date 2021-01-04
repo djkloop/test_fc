@@ -1,8 +1,12 @@
  {
-   "el-input": [
-     {
-       "type": "el-input",
-       "title": "占位内容"
-     }
-   ]
+  "message":"good",
+  "code": 200,
+  "result": {
+    "el-input": [
+      {
+        "type": "el-input",
+        "title": "占位内容"
+      }
+    ]
+  }
  }

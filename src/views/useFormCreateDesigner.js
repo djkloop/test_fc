@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2020-12-31 19:15:23
+ * @LastEditTime  : 2021-01-04 18:02:09
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -11,7 +11,7 @@ import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from
 import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
 import classnames from 'classnames'
-import { configJsonItemFactory } from '@/packages/store'
+import { createConfigJsonItemFactory } from '@/packages/store'
 
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
@@ -57,12 +57,11 @@ const useSetActiveItem = (item) => {
             class: classnames('form-create-designer-widget__item__tools')
         })
     }
-
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
     useStateWithPage.activeItem = cloneDeep(item)
-    console.log(item)
-    configJsonItemFactory(item.type, item.field)
+    const originItem = item.children[0].children[1]
+    createConfigJsonItemFactory(originItem.type, originItem.field)
 
 }
 

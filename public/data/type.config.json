@@ -5,7 +5,9 @@
     "el-input": [
       {
         "type": "el-input",
-        "title": "占位内容"
+        "title": "占位内容",
+        "value": "",
+        "label": "占位内容"
       }
     ]
   }

@@ -1,13 +1,13 @@
 /*
  * @Author        : djkloop
  * @Date          : 2020-12-31 15:41:38
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-04 16:06:22
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2021-01-04 22:09:27
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/components/form-create-designer-header/useFormCreateDesignerHeader.js
+ * @FilePath     : /test_fc/src/components/form-create-designer-header/useFormCreateDesignerHeader.js
  */
 import { reactive } from '@vue/composition-api'
-import { Mediator } from '@/packages/store'
+import { getConfigJsonFactory } from '@/packages/store'
 export const useHeaderState = reactive({
   loading: true
 })
@@ -23,7 +23,7 @@ export const useHeaderState = reactive({
       .then(result => result.json())
       .then(data => {
         if (data.code === 200) {
-          new Mediator().SetDefaultTypeJSONTemplate(data.result)
+          getConfigJsonFactory().SetDefaultTypeJSONTemplate(data.result)
           setTimeout(() => (
             useHeaderState.loading = false
           ), 2000)

@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors   : djkloop
- * @LastEditTime  : 2020-12-31 18:10:38
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2021-01-04 22:37:56
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
+ * @FilePath     : /test_fc/src/views/FormCreateDesigner.vue
 -->
 <style lang="scss">
 @import '@/assets/reset.sass';
@@ -51,14 +51,14 @@
           </div>
         </el-aside>
         <el-main class="form-create-designer-main">
-          <div v-if="isShowEmpty" class="common-empty-text">
+          <div v-if="mainList.length === 0" class="common-empty-text">
             从左侧选择控件添加
           </div>
           <form-create v-model="fApi" :rule="rules" :option="options" />
         </el-main>
         <el-aside width="350px">
           <div class="form-create-designer-config">
-            <!-- <form-create-designer-config :config-json="activeItem" /> -->
+            <form-create-designer-config :config-item-json="activeItem" :active-item-observable$="activeItemObservable$" />
           </div>
         </el-aside>
       </el-container>
@@ -67,12 +67,11 @@
 </template>
 
 <script>
-import { defineComponent, watch, toRefs, getCurrentInstance } from "@vue/composition-api";
+import { defineComponent, toRefs, getCurrentInstance } from "@vue/composition-api";
 import {
   useNavCloneItem,
   useNavClickCloneItem,
   useInitDraggableItem,
-  useSetEmptyStatus,
   useSetVM
 } from "./useFormCreateDesigner";
 import {
@@ -90,12 +89,6 @@ export default defineComponent({
     useInitDraggableItem()
     /// 设置当前的上下文 vm
     useSetVM(proxy)
-    /// hack bug
-    watch(() => useStateWithDraggables.mainList, (v) => {
-      useSetEmptyStatus(v.length === 0)
-    }, {
-      deep: true
-    })
     return {
       ...toRefs(useStateWithFormCreate),
       ...toRefs(useStateWithNav),

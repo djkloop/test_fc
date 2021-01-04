@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-04 18:02:09
- * @LastEditors   : djkloop
+ * @LastEditTime : 2021-01-04 22:37:32
+ * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId } from "@/libs/useUtils"
@@ -60,9 +60,11 @@ const useSetActiveItem = (item) => {
     item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
     useStateWithPage.activeItem = cloneDeep(item)
+    /// 最原始的item（这里需要优化）
     const originItem = item.children[0].children[1]
-    createConfigJsonItemFactory(originItem.type, originItem.field)
-
+    /// 去总的json表取对应的item
+    const activeItemObservable$ = createConfigJsonItemFactory(originItem.type, originItem.field)
+    useStateWithPage.activeItemObservable$ = activeItemObservable$
 }
 
 const useWrapperChildren = item => {

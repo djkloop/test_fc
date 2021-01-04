@@ -1,35 +1,43 @@
 /*
  * @Author        : djkloop
  * @Date          : 2020-12-31 18:19:47
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-04 17:40:01
- * @Description   : 头部注释
- * @FilePath      : /test_fc/src/packages/store/index.js
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2021-01-04 23:49:14
+ * @Description   : 这个文件有很多东西是为了学习存在的...例如rxjs
+ * @FilePath     : /test_fc/src/packages/store/index.js
  */
 import { reactive } from '@vue/composition-api'
+import { Notification } from 'element-ui'
 import { cloneDeep } from 'lodash'
 import { BehaviorSubject } from 'rxjs'
+import { useAutoField } from '@/libs/useUtils'
 
 
 /// 前期先协定成这样，后期有可能扩展每个item的属性等其它操作
-/// 抽离出来
-function ConfigJsonItem(field, type) {
+/// 暂时抽离出来
+function ConfigJsonItem(type, field) {
   this.field = field
   this.type = type
 }
 
+/**
+ * 中介者
+ * 
+ * 这里存着所有的表单json type配置表
+ * 所有的操作方法都存放在这里
+ */
 function Mediator() {
-  this._config_json = reactive({})
+  this.configJson = reactive({})
   this.configItems$ = new BehaviorSubject({})
 
 }
 
 Mediator.prototype.SetDefaultTypeJSONTemplate = function (defaultTypeJson) {
-  this._config_json = defaultTypeJson
+  this.configJson = defaultTypeJson
 }
 
 Mediator.prototype.ExtendTemplate = function (extendJson) {
-  this._config_json = cloneDeep(extendJson)
+  this.configJson = cloneDeep(extendJson)
 }
 
 /**
@@ -37,8 +45,20 @@ Mediator.prototype.ExtendTemplate = function (extendJson) {
  *
  * @param {ConfigItem} configInstance 每一个小的item组件属性
  */
-Mediator.prototype.CreateObserver = function(configInstance) {
-  console.log(configInstance)
+Mediator.prototype.CreateObserverItem = function(configInstance) {
+  /// 取到对应的type然后从主json加载出来一份
+  /// 然后clone一份给右侧区域用
+  const { type, field } = configInstance
+  const cloneConfigJsonArray = cloneDeep(this.configJson[type])
+  cloneConfigJsonArray.forEach(item => {
+    item['field'] = useAutoField()
+    item['target_field'] = field
+  })
+  this.configItems$.next({...this.configItems$.value, ...{ [field]: cloneConfigJsonArray } })
+  return {
+    observerConfigItem$: this.configItems$,
+    field
+  }
 }
 
 /**
@@ -50,25 +70,31 @@ Mediator.prototype.GetObserver = function(field) {
   return this.configItems$[field]
 }
 
-var SingleInstance = (function() {
+const SingleMediatorInstance = (function() {
   var instance
   return function(item) {
     if (!instance) {
       instance = new Mediator()
-      instance.CreateObserver(item)
-    } else {
-      instance.CreateObserver(item)
-    }
+      if (item) {
+        return instance.CreateObserverItem(item)
+      }
+    } else if(item) {
+      return instance.CreateObserverItem(item)
+    } 
     return instance
   }
 })()
 
-export const createConfigJsonItemFactory = (field, type) => {
-  const configJsonitemInstance = new ConfigJsonItem(field, type)
-  new SingleInstance(configJsonitemInstance)
+/// 通过中介者单例创建每个item
+export const createConfigJsonItemFactory = (type, field) => {
+  const configJsonitemInstance = new ConfigJsonItem(type, field)
+  if (field) {
+    return SingleMediatorInstance(configJsonitemInstance)
+  } else {
+    Notification.warning("报错了！")
+    return null
+  }
 }
 
-export {
-  Mediator,
-  ConfigJsonItem
-}
+/// 获取单例
+export const getConfigJsonFactory = () => SingleMediatorInstance()

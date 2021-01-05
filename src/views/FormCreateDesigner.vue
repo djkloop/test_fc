@@ -1,8 +1,8 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors  : djkloop
- * @LastEditTime : 2021-01-04 22:37:56
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-01-05 12:18:19
  * @Description   : 头部注释
  * @FilePath     : /test_fc/src/views/FormCreateDesigner.vue
 -->
@@ -58,7 +58,7 @@
         </el-main>
         <el-aside width="350px">
           <div class="form-create-designer-config">
-            <form-create-designer-config :config-item-json="activeItem" :active-item-observable$="activeItemObservable$" />
+            <form-create-designer-config :main-fapi="fApi" :config-item-json="activeItem" :active-item-observable$="activeItemObservable$" />
           </div>
         </el-aside>
       </el-container>

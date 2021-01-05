@@ -7,7 +7,22 @@
         "type": "el-input",
         "title": "占位内容",
         "value": "",
+        "target": "attrs.placeholder",
         "label": "占位内容"
+      },
+      {
+        "target": "attrs.readonly",
+        "label": "可读性",
+        "type":"switch",
+        "title":"可读性",
+        "value": false
+      },
+      {
+        "target": "attrs.disabled",
+        "label": "禁用",
+        "type":"switch",
+        "title":"禁用",
+        "value": false
       }
     ]
   }

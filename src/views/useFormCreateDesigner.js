@@ -1,11 +1,11 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-05 12:33:46
+ * @LastEditTime: 2021-01-05 15:57:14
  * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
-import { useAutoField, useUniqueId } from "@/libs/useUtils"
+import { useAutoField, useUniqueId, useGetOriginItem } from "@/libs/useUtils"
 import { cloneDeep } from "lodash";
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
 import { useTransferRow, useTransferInput } from "./useTransfer";
@@ -22,16 +22,16 @@ const _useCloneItem = item => {
     const cloneItem = cloneDeep(item)
     /// 布局组件不需要这些field
     /// 只需要脱离引用关系就行了
+    const onlyField = useAutoField();
     if (item.design.type !== 'layout') {
-        const onlyField = useAutoField();
         cloneItem.children[0].children[1]["field"] = onlyField;
         cloneItem.children[0].children[1]["title"] = onlyField;
-        cloneItem.children[0].children[1]["name"] = onlyField;
         cloneItem.children[0].children[1]["id"] = onlyField;
         cloneItem.children[0].children[1]['prev_field'] = item.field
         /// 把key也换掉
         cloneItem.children[0].children[2]['children'] = [onlyField]
     }
+    cloneItem.children[0].children[1]["name"] = onlyField;
     return cloneItem
 }
 
@@ -62,7 +62,9 @@ const useSetActiveItem = (item) => {
     // useStateWithPage.activeItem = cloneDeep(item)
     useStateWithPage.activeItem = item
     /// 最原始的item（这里需要优化）
-    const originItem = item.children[0].children[1]
+    const originItem = useGetOriginItem(item)
+    console.log(originItem);
+    
     /// 去总的json表取对应的item
     const activeItemObservable$ = createConfigJsonItemFactory(originItem)
     useStateWithPage.activeItemObservable$ = activeItemObservable$
@@ -146,7 +148,8 @@ export const useNavCloneItem = item => {
 /// 点击左侧列表触发的事件
 export const useNavClickCloneItem = item => {
     /// 如果当前没有被激活的item说明是主区域没有任何元素
-    const cloneItem = useNavCloneItem(item)
+    const _cloneItem = useNavCloneItem(item)
+    const cloneItem = _useCloneItem(_cloneItem)
     if (!useStateWithPage.activeItem) {
         useStateWithDraggables.mainList.push(cloneItem)
     } else {

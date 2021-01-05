@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime : 2020-12-30 22:26:55
- * @LastEditors  : djkloop
+ * @LastEditTime: 2021-01-05 15:26:35
+ * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
 import { useAutoField } from "@/libs/useUtils";
@@ -32,12 +32,14 @@ export const useTransferRow = (item) => {
   item["children"] = [
     {
       type: "el-col",
+      name: useAutoField(),
       props: { span: 12 },
       class: classnames("form-create-designer-widget__col"),
       children: [useWrapperDrag()]
     },
     {
       type: "el-col",
+      name: useAutoField(),
       props: { span: 12 },
       class: classnames("form-create-designer-widget__col"),
       children: [useWrapperDrag()]

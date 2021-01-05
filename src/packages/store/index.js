@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-31 18:19:47
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 14:18:42
+ * @LastEditTime: 2021-01-05 16:49:15
  * @Description   : 这个文件有很多东西是为了学习存在的...例如rxjs
  * @FilePath      : /test_fc/src/packages/store/index.js
  */
@@ -17,8 +17,9 @@ import * as dot from 'dot-wild';
 /// 前期先协定成这样，后期有可能扩展每个item的属性等其它操作
 /// 暂时抽离出来
 function ConfigJsonItem(originItem) {
-  const { field, type } = originItem
+  const { field, type, name } = originItem
   this.field = field
+  this.name = name
   this.type = type
   this.originItem = originItem
 }
@@ -51,23 +52,42 @@ Mediator.prototype.ExtendTemplate = function (extendJson) {
 Mediator.prototype.CreateObserverItem = function(configInstance) {
   /// 取到对应的type然后从主json加载出来一份
   /// 然后clone一份给右侧区域用
-  const { type, field, originItem } = configInstance
-  const cloneConfigJsonArray = cloneDeep(this.configJson[type])
-  cloneConfigJsonArray.forEach(item => {
-    item['field'] = useAutoField() /// 每个item生成唯一的key
-    item['target_field'] = field /// 每个item要对应当前的item key
-    if(dot.has(originItem, item.target)) {
-      const val = dot.get(originItem, item.target)
-      console.log(val);
-      item.value = val
-      // dot.set(item, 'value', val)
-      console.log(item);
+  const { type, field, name, originItem } = configInstance
+  let cloneConfigJsonArray = cloneDeep(this.configJson[type]) || []
+  const _field = field || name
+  console.log(originItem);
+  
+  if (Array.isArray(cloneConfigJsonArray) && cloneConfigJsonArray.length) {
+    cloneConfigJsonArray.forEach(item => {
+      item['field'] = useAutoField() /// 每个item生成唯一的key
+      item['target_field'] = _field /// 每个item要对应当前的item key
+      if(dot.has(originItem, item.target)) {
+        const val = dot.get(originItem, item.target)
+        item['value'] = val
+      }
+    })
+    let childrenConfigArray = []
+    if (originItem.type === 'el-row') {
+      childrenConfigArray = originItem.children.map((item, idx) => {
+        const _field = item.name
+        item['field'] = useAutoField() /// 每个item生成唯一的key
+        item['target_field'] = _field /// 每个item要对应当前的item key    
+        if(dot.has(originItem.children[idx], item.target)) {
+          const val = dot.get(originItem.children[idx], item.target)
+          item['value'] = val
+        }
+        return item
+      })
     }
-  })
-  this.configItems$.next({...this.configItems$.value, ...{ [field]: cloneConfigJsonArray } })
+    cloneConfigJsonArray = [...cloneConfigJsonArray, ...childrenConfigArray]
+    console.log(cloneConfigJsonArray);
+  } else {
+    Notification.error("当前组件没有对应的属性配置JSON!")
+  }
+  this.configItems$.next({...this.configItems$.value, ...{ [_field]: cloneConfigJsonArray } })
   return {
     observerConfigItem$: this.configItems$,
-    field
+    field: _field
   }
 }
 
@@ -98,7 +118,7 @@ const SingleMediatorInstance = (function() {
 /// 通过中介者单例创建每个item
 export const createConfigJsonItemFactory = (originItem) => {
   const configJsonitemInstance = new ConfigJsonItem(originItem)
-  if (originItem.field) {
+  if (originItem.field || originItem.name) {
     return SingleMediatorInstance(configJsonitemInstance)
   } else {
     Notification.warning("报错了！")

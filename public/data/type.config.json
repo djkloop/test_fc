@@ -23,6 +23,29 @@
         "type":"switch",
         "title":"禁用",
         "value": false
+      },
+      {
+        "target": "title",
+        "label": "",
+        "type": "el-input",
+        "title":"标题",
+        "value": ""
+      },
+      {
+        "target": "value",
+        "label": "",
+        "type": "el-input",
+        "title":"内容",
+        "value": ""
+      }
+    ],
+    "el-row": [
+      {
+        "type": "el-input-number",
+        "title": "栅格间隔",
+        "value": 0,
+        "target": "attrs.gutter",
+        "label": "栅格间隔"
       }
     ]
   }

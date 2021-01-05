@@ -1,10 +1,10 @@
 /*
  * @Author        : djkloop
  * @Date          : 2020-12-31 18:19:47
- * @LastEditors  : djkloop
- * @LastEditTime : 2021-01-04 23:49:14
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-01-05 11:48:25
  * @Description   : 这个文件有很多东西是为了学习存在的...例如rxjs
- * @FilePath     : /test_fc/src/packages/store/index.js
+ * @FilePath      : /test_fc/src/packages/store/index.js
  */
 import { reactive } from '@vue/composition-api'
 import { Notification } from 'element-ui'
@@ -22,7 +22,7 @@ function ConfigJsonItem(type, field) {
 
 /**
  * 中介者
- * 
+ *
  * 这里存着所有的表单json type配置表
  * 所有的操作方法都存放在这里
  */
@@ -51,8 +51,8 @@ Mediator.prototype.CreateObserverItem = function(configInstance) {
   const { type, field } = configInstance
   const cloneConfigJsonArray = cloneDeep(this.configJson[type])
   cloneConfigJsonArray.forEach(item => {
-    item['field'] = useAutoField()
-    item['target_field'] = field
+    item['field'] = useAutoField() /// 每个item生成唯一的key
+    item['target_field'] = field /// 每个item要对应当前的item key
   })
   this.configItems$.next({...this.configItems$.value, ...{ [field]: cloneConfigJsonArray } })
   return {
@@ -80,7 +80,7 @@ const SingleMediatorInstance = (function() {
       }
     } else if(item) {
       return instance.CreateObserverItem(item)
-    } 
+    }
     return instance
   }
 })()

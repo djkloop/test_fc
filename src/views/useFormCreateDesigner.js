@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-06 17:48:34
- * @LastEditors   : djkloop
+ * @LastEditTime: 2021-01-06 18:59:08
+ * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
@@ -12,10 +12,11 @@ import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
 import classnames from 'classnames'
 import { createConfigJsonItemFactory } from '@/packages/store'
-
+import * as dot from 'dot-wild';
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
+    const { fApi } = useStateWithFormCreate
     /******************************************* */
     /* clone 的时候一定要深拷贝 要不然一堆bug         */
     /******************************************* */
@@ -31,6 +32,34 @@ const _useCloneItem = item => {
         cloneItem.children[0].children[2]['children'] = [onlyField]
     } else {
         console.log('____')
+        let keyValues = dot.flatten(item)
+        let keys = Object.keys(keyValues)
+        if (keys.join('.').indexOf('field') !== -1) {
+            console.log(keys);
+            let fieldArrays = []
+            const updateFieldsRule = {}
+            keys.forEach(key => {
+                if (key.indexOf('field') !== -1) {
+                    console.log(key, 'key');
+                    
+                    fieldArrays.push(keyValues[key])
+                }
+            })
+            console.log(fieldArrays, 'fieldArrays');
+            
+            fieldArrays.forEach(fields => {
+                const item = cloneDeep(fApi.getRule(fields))
+                item.prev_field = item.field
+                item.field = useAutoField();
+                updateFieldsRule[fields] = item
+            })
+            console.log('===================');
+            
+            console.log(updateFieldsRule);
+            
+            fApi.updateRules(updateFieldsRule)
+        }
+        console.log(dot.flatten(item))
     }
     useGetOriginItem(cloneItem)["name"] = onlyField;
     return cloneItem
@@ -195,10 +224,7 @@ export const useInitDraggableItem = () => {
         props: {
             list: useStateWithDraggables.mainList,
             tag: "div",
-            clone: _useCloneItem,
-            move: ({ draggedContext }) => {
-                useSetActiveItem(draggedContext.element)
-            }
+            clone: _useCloneItem
         },
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
@@ -220,6 +246,9 @@ export const useInitDraggableItem = () => {
             change: _useChangeItem,
             add : (e) => {
                 useSetActiveItem(e.item._underlying_vm_)
+            },
+            end: (e) => {
+                useSetActiveItem(e.item._underlying_vm_)
             }
         },
     });
@@ -238,10 +267,7 @@ export const useWrapperDrag = () => {
         props: {
             list: otherList.value,
             tag: "div",
-            clone: _useCloneItem,
-            move: ({ draggedContext }) => {
-                useSetActiveItem(draggedContext.element)
-            }
+            clone: _useCloneItem
         },
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
@@ -262,9 +288,10 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                console.log(useStateWithFormCreate.fApi.getRule(e.item._underlying_vm_.name), ' add__fapi-w')
-                console.log(e.item._underlying_vm_, ' add__under-w')
                 useSetActiveItem(e.item._underlying_vm_, 'add')
+            },
+            end: (e) => {
+                useSetActiveItem(e.item._underlying_vm_)
             }
         },
     };

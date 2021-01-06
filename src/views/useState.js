@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime : 2021-01-04 22:36:22
- * @LastEditors  : djkloop
+ * @LastEditTime: 2021-01-06 18:24:08
+ * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
 import { reactive } from "@vue/composition-api"
@@ -31,19 +31,7 @@ export const useStateWithNav = reactive({
             design: {
                 type: 'form', /// 属于什么类型的组件
                 name: '输入框'
-            },
-            config_rule: [
-                {
-                    type: 'el-input',
-                    title: '占位内容',
-                    field: 'fuck_',
-                    value: '',
-                    target: {
-                        params: 'attrs',
-                        property: 'placeholder'
-                    } /// 映射当前组件的key
-                }
-            ]
+            }
         },
     ]
 });

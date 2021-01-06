@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-05 15:57:14
+ * @LastEditTime: 2021-01-06 16:22:40
  * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
@@ -30,6 +30,13 @@ const _useCloneItem = item => {
         cloneItem.children[0].children[1]['prev_field'] = item.field
         /// 把key也换掉
         cloneItem.children[0].children[2]['children'] = [onlyField]
+    } else {
+        // cloneItem.children[0].children[1]["field"] = onlyField;
+        // cloneItem.children[0].children[1]["title"] = onlyField;
+        cloneItem.children[0].children[1]["id"] = onlyField;
+        cloneItem.children[0].children[1]['prev_field'] = item.field
+        /// 把key也换掉
+        // cloneItem.children[0].children[2]['children'] = [onlyField]
     }
     cloneItem.children[0].children[1]["name"] = onlyField;
     return cloneItem
@@ -48,6 +55,10 @@ const _useChangeItem = ({ removed }) => {
 
 /// 当前页面激活的item
 const useSetActiveItem = (item) => {
+    console.log(item);
+    console.log('*********');
+    console.log(useStateWithPage.activeItem);
+    
     if (useStateWithPage.activeItem) {
         /// 删除上一个激活的activeItem类名
         useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
@@ -57,13 +68,18 @@ const useSetActiveItem = (item) => {
             class: classnames('form-create-designer-widget__item__tools')
         })
     }
-    item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
-    item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
+    // item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
+    useStateWithFormCreate.fApi.updateRule(item.name, {
+        class: classnames(item['class'], 'form-create-designer-widget__item__active')
+    })
+    useStateWithFormCreate.fApi.updateRule(item.children[0].children[0].name, {
+        class: classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
+    })
+    // item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
     // useStateWithPage.activeItem = cloneDeep(item)
     useStateWithPage.activeItem = item
     /// 最原始的item（这里需要优化）
     const originItem = useGetOriginItem(item)
-    console.log(originItem);
     
     /// 去总的json表取对应的item
     const activeItemObservable$ = createConfigJsonItemFactory(originItem)
@@ -127,6 +143,18 @@ const useCommonWrapper = item => {
     }
 }
 
+const useCommonEvent = (item) => {
+    return Object.assign({}, item, {
+        on: {
+            click: function(e) {
+                let _field = item.field || item.name
+                const _item = useStateWithFormCreate.fApi.getRule(_field)
+                useSetActiveItem(_item)
+                e.stopPropagation()
+            }
+        }
+    })
+}
 /// 左侧列表拖拽触发clone事件
 export const useNavCloneItem = item => {
     let cloneItem = cloneDeep(item);
@@ -142,6 +170,7 @@ export const useNavCloneItem = item => {
             break;
     }
     cloneItem = useCommonWrapper(cloneItem)
+    cloneItem = useCommonEvent(cloneItem)
     return cloneItem;
 };
 
@@ -190,7 +219,14 @@ export const useInitDraggableItem = () => {
         on: {
             change: _useChangeItem,
             add : (e) => {
-                useSetActiveItem(e.item._underlying_vm_)
+                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
+                    useSetActiveItem(e.item._underlying_vm_)
+                }
+            },
+            start: (e) => {
+                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
+                    useSetActiveItem(e.item._underlying_vm_)
+                }
             }
         },
     });
@@ -230,7 +266,15 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                useSetActiveItem(e.item._underlying_vm_)
+                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
+                    useSetActiveItem(e.item._underlying_vm_)
+                }
+            },
+            start: (e) => {
+                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
+                    useSetActiveItem(e.item._underlying_vm_)
+                }
+                
             }
         },
     };

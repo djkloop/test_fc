@@ -1,8 +1,8 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-06 15:09:52
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-01-06 16:23:52
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -49,10 +49,6 @@ export default {
     watch(() => props.activeItemObservable$, (v) => {
       if (v.field) {
         useStateWithFormCreate.rules = v.observerConfigItem$.value[v.field]
-        v.observerConfigItem$.subscribe({
-          next: x => console.log(x, ' x')
-        })
-        console.log(useStateWithFormCreate.rules)
       }
     }, {
       immediate: false

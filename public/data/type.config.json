@@ -41,11 +41,20 @@
     ],
     "el-row": [
       {
-        "type": "el-input-number",
+        "type": "InputNumber",
         "title": "栅格间隔",
         "value": 0,
         "target": "attrs.gutter",
         "label": "栅格间隔"
+      }
+    ],
+    "el-col": [
+      {
+        "type": "InputNumber",
+        "title": "栅格span",
+        "value": 0,
+        "target": "attrs.span",
+        "label": "栅格span"
       }
     ]
   }

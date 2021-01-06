@@ -5,6 +5,16 @@
     "el-input": [
       {
         "type": "el-input",
+        "title": "数据字段",
+        "value": "",
+        "props": {
+          "disabled": true
+        },
+        "target": "field",
+        "label": "数据字段"
+      },
+      {
+        "type": "el-input",
         "title": "占位内容",
         "value": "",
         "target": "attrs.placeholder",

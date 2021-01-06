@@ -1,11 +1,11 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-06 16:22:40
- * @LastEditors: Please set LastEditors
+ * @LastEditTime  : 2021-01-06 17:48:34
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
-import { useAutoField, useUniqueId, useGetOriginItem } from "@/libs/useUtils"
+import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
 import { cloneDeep } from "lodash";
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
 import { useTransferRow, useTransferInput } from "./useTransfer";
@@ -21,24 +21,18 @@ const _useCloneItem = item => {
     /******************************************* */
     const cloneItem = cloneDeep(item)
     /// 布局组件不需要这些field
-    /// 只需要脱离引用关系就行了
     const onlyField = useAutoField();
     if (item.design.type !== 'layout') {
-        cloneItem.children[0].children[1]["field"] = onlyField;
-        cloneItem.children[0].children[1]["title"] = onlyField;
-        cloneItem.children[0].children[1]["id"] = onlyField;
-        cloneItem.children[0].children[1]['prev_field'] = item.field
+        useGetOriginItem(cloneItem)["field"] = onlyField;
+        useGetOriginItem(cloneItem)["title"] = onlyField;
+        useGetOriginItem(cloneItem)["id"] = onlyField;
+        useGetOriginItem(cloneItem)['prev_field'] = item.field
         /// 把key也换掉
         cloneItem.children[0].children[2]['children'] = [onlyField]
     } else {
-        // cloneItem.children[0].children[1]["field"] = onlyField;
-        // cloneItem.children[0].children[1]["title"] = onlyField;
-        cloneItem.children[0].children[1]["id"] = onlyField;
-        cloneItem.children[0].children[1]['prev_field'] = item.field
-        /// 把key也换掉
-        // cloneItem.children[0].children[2]['children'] = [onlyField]
+        console.log('____')
     }
-    cloneItem.children[0].children[1]["name"] = onlyField;
+    useGetOriginItem(cloneItem)["name"] = onlyField;
     return cloneItem
 }
 
@@ -55,10 +49,10 @@ const _useChangeItem = ({ removed }) => {
 
 /// 当前页面激活的item
 const useSetActiveItem = (item) => {
-    console.log(item);
+    console.log(item, ' useSetActiveItem - item');
     console.log('*********');
-    console.log(useStateWithPage.activeItem);
-    
+    console.log(useStateWithPage.activeItem, ' useStateWithPage.activeItem');
+
     if (useStateWithPage.activeItem) {
         /// 删除上一个激活的activeItem类名
         useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
@@ -72,15 +66,16 @@ const useSetActiveItem = (item) => {
     useStateWithFormCreate.fApi.updateRule(item.name, {
         class: classnames(item['class'], 'form-create-designer-widget__item__active')
     })
-    useStateWithFormCreate.fApi.updateRule(item.children[0].children[0].name, {
-        class: classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
+    useStateWithFormCreate.fApi.updateRule(useGetToolsBox(item).name, {
+        class: classnames(useGetToolsBox(item).class, 'form-create-designer-widget__item__tools__active')
     })
     // item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
     // useStateWithPage.activeItem = cloneDeep(item)
     useStateWithPage.activeItem = item
+
     /// 最原始的item（这里需要优化）
     const originItem = useGetOriginItem(item)
-    
+
     /// 去总的json表取对应的item
     const activeItemObservable$ = createConfigJsonItemFactory(originItem)
     useStateWithPage.activeItemObservable$ = activeItemObservable$
@@ -147,10 +142,12 @@ const useCommonEvent = (item) => {
     return Object.assign({}, item, {
         on: {
             click: function(e) {
-                let _field = item.field || item.name
-                const _item = useStateWithFormCreate.fApi.getRule(_field)
-                useSetActiveItem(_item)
                 e.stopPropagation()
+                if (useStateWithPage.activeItem.name !== item.name) {
+                    let _field = item.field || item.name
+                    const _item = useStateWithFormCreate.fApi.getRule(_field)
+                    useSetActiveItem(_item)
+                }
             }
         }
     })
@@ -198,7 +195,10 @@ export const useInitDraggableItem = () => {
         props: {
             list: useStateWithDraggables.mainList,
             tag: "div",
-            clone: _useCloneItem
+            clone: _useCloneItem,
+            move: ({ draggedContext }) => {
+                useSetActiveItem(draggedContext.element)
+            }
         },
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
@@ -219,14 +219,7 @@ export const useInitDraggableItem = () => {
         on: {
             change: _useChangeItem,
             add : (e) => {
-                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
-                    useSetActiveItem(e.item._underlying_vm_)
-                }
-            },
-            start: (e) => {
-                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
-                    useSetActiveItem(e.item._underlying_vm_)
-                }
+                useSetActiveItem(e.item._underlying_vm_)
             }
         },
     });
@@ -246,6 +239,9 @@ export const useWrapperDrag = () => {
             list: otherList.value,
             tag: "div",
             clone: _useCloneItem,
+            move: ({ draggedContext }) => {
+                useSetActiveItem(draggedContext.element)
+            }
         },
         attrs: {
             ...useStateWithDraggables.draggableMainOptions,
@@ -266,15 +262,9 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
-                    useSetActiveItem(e.item._underlying_vm_)
-                }
-            },
-            start: (e) => {
-                if (e.item._underlying_vm_.name !== useStateWithPage.activeItem.name) {
-                    useSetActiveItem(e.item._underlying_vm_)
-                }
-                
+                console.log(useStateWithFormCreate.fApi.getRule(e.item._underlying_vm_.name), ' add__fapi-w')
+                console.log(e.item._underlying_vm_, ' add__under-w')
+                useSetActiveItem(e.item._underlying_vm_, 'add')
             }
         },
     };

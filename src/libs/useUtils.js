@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:07:50
- * @LastEditTime: 2021-01-05 15:08:17
- * @LastEditors: Please set LastEditors
+ * @LastEditTime  : 2021-01-06 16:45:27
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { uniqueId } from "lodash";
@@ -29,4 +29,8 @@ export const useGetOriginItem = (item) => {
     } else {
         return item.children[0].children[1]
     }
+}
+
+export const useGetToolsBox = item => {
+    return item.children[0].children[0]
 }

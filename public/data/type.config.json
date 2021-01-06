@@ -53,7 +53,7 @@
         "type": "InputNumber",
         "title": "栅格span",
         "value": 0,
-        "target": "attrs.span",
+        "target": "props.span",
         "label": "栅格span"
       }
     ]

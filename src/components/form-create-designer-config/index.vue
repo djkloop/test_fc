@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 14:19:03
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-01-06 15:09:52
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/components/form-create-designer-config/index.vue
+ * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
 <template>
   <form-create v-model="fApi" :rule="rules" :option="options" />
@@ -34,16 +34,16 @@ export default {
   },
   setup(props) {
     onMounted(() => {
+      const { mainFapi } = props
       const { fApi } = useStateWithFormCreate
       fApi.on('change', e => {
-        // console.log(e, ' e')
-        // console.log(fApi.getRule(e))
-        // console.log(props.configItemJson);
-        let item = props.configItemJson.children[0].children[1]
+        console.log(e, ' e')
+        /// 先获取到主区域的item的key
+        const { target_field } = fApi.getRule(e)
+        /// 主区域的item
+        let item = mainFapi.getRule(target_field)
         item = dot.set(item, fApi.getRule(e).target, fApi.getRule(e).value)
-        console.log(item);
-        console.log(fApi.getRule(e).target_field);
-        props.mainFapi.updateRule(fApi.getRule(e).target_field, item)
+        mainFapi.updateRule(target_field, item)
       })
     })
     watch(() => props.activeItemObservable$, (v) => {

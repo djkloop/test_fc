@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-06 18:59:08
+ * @LastEditTime: 2021-01-07 20:35:57
  * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
@@ -13,6 +13,29 @@ import { reactive, ref } from "@vue/composition-api";
 import classnames from 'classnames'
 import { createConfigJsonItemFactory } from '@/packages/store'
 import * as dot from 'dot-wild';
+
+const _useCloneFromItem = (cloneItem) => {
+    const onlyField = useAutoField();
+    useGetOriginItem(cloneItem)['prev_field'] = useGetOriginItem(cloneItem).field
+    useGetOriginItem(cloneItem)["field"] = onlyField;
+    useGetOriginItem(cloneItem)["title"] = onlyField;
+    useGetOriginItem(cloneItem)["id"] = onlyField;
+    /// 把key也换掉
+    cloneItem.children[0].children[2]['children'] = [onlyField]
+    return cloneItem
+}
+const _useClearActiveFromItem = (cloneItem) => {
+    console.log(cloneItem);
+    
+    /// 删除上一个激活的activeItem类名
+    useStateWithFormCreate.fApi.updateRule(cloneItem.name, {
+        class: classnames('form-create-designer-widget__item')
+    })
+    useStateWithFormCreate.fApi.updateRule(cloneItem.children[0].children[0].name, {
+        class: classnames('form-create-designer-widget__item__tools')
+    })
+    return cloneItem
+}
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
@@ -20,7 +43,7 @@ const _useCloneItem = item => {
     /******************************************* */
     /* clone 的时候一定要深拷贝 要不然一堆bug         */
     /******************************************* */
-    const cloneItem = cloneDeep(item)
+    let cloneItem = cloneDeep(item)
     /// 布局组件不需要这些field
     const onlyField = useAutoField();
     if (item.design.type !== 'layout') {
@@ -31,33 +54,31 @@ const _useCloneItem = item => {
         /// 把key也换掉
         cloneItem.children[0].children[2]['children'] = [onlyField]
     } else {
-        console.log('____')
-        let keyValues = dot.flatten(item)
+        let keyValues = dot.flatten(cloneItem)
         let keys = Object.keys(keyValues)
         if (keys.join('.').indexOf('field') !== -1) {
-            console.log(keys);
             let fieldArrays = []
-            const updateFieldsRule = {}
+            let parentNames = []
             keys.forEach(key => {
-                if (key.indexOf('field') !== -1) {
+                if (key.indexOf('.field') !== -1 && key.indexOf('.props') === -1) {
                     console.log(key, 'key');
-                    
+                    let namesStr = key.split('.')
+                    namesStr = namesStr.slice(0, namesStr.length - 5)
+                    let parentNameStr = namesStr.slice(0, namesStr.length - 6)
+                    namesStr = namesStr.join('.')
+
+
+                    let _itemBox = cloneDeep(dot.get(cloneItem, namesStr))
+                    fApi.removeField(_itemBox.name)
+                    cloneItem = dot.set(cloneItem, namesStr.concat('.children'),[] )
+                    _itemBox = _useCloneFromItem(_itemBox)
+                    fApi.append(_itemBox, dot.get(cloneItem, parentNameStr.join('.')).name, true)
+                    cloneItem = dot.set(cloneItem, parentNameStr.concat('.children'), [_itemBox] )
+                    _itemBox = _useClearActiveFromItem(_itemBox)
+                    parentNames.push(namesStr)
                     fieldArrays.push(keyValues[key])
                 }
             })
-            console.log(fieldArrays, 'fieldArrays');
-            
-            fieldArrays.forEach(fields => {
-                const item = cloneDeep(fApi.getRule(fields))
-                item.prev_field = item.field
-                item.field = useAutoField();
-                updateFieldsRule[fields] = item
-            })
-            console.log('===================');
-            
-            console.log(updateFieldsRule);
-            
-            fApi.updateRules(updateFieldsRule)
         }
         console.log(dot.flatten(item))
     }

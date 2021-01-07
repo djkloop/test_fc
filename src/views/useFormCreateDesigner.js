@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-07 20:35:57
+ * @LastEditTime: 2021-01-07 20:44:57
  * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
@@ -66,14 +66,18 @@ const _useCloneItem = item => {
                     namesStr = namesStr.slice(0, namesStr.length - 5)
                     let parentNameStr = namesStr.slice(0, namesStr.length - 6)
                     namesStr = namesStr.join('.')
-
+                    console.log('/////////////////////////////////');
+                    console.log(parentNameStr);
+                    console.log(dot.get(cloneItem, parentNameStr));
+                    
+                    
 
                     let _itemBox = cloneDeep(dot.get(cloneItem, namesStr))
                     fApi.removeField(_itemBox.name)
                     cloneItem = dot.set(cloneItem, namesStr.concat('.children'),[] )
                     _itemBox = _useCloneFromItem(_itemBox)
                     fApi.append(_itemBox, dot.get(cloneItem, parentNameStr.join('.')).name, true)
-                    cloneItem = dot.set(cloneItem, parentNameStr.concat('.children'), [_itemBox] )
+                    cloneItem = dot.set(cloneItem, parentNameStr.join('.').concat('.children'), [_itemBox] )
                     _itemBox = _useClearActiveFromItem(_itemBox)
                     parentNames.push(namesStr)
                     fieldArrays.push(keyValues[key])

@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:07:50
- * @LastEditTime  : 2021-01-06 16:45:27
- * @LastEditors   : djkloop
+ * @LastEditTime: 2021-01-08 20:41:42
+ * @LastEditors: Please set LastEditors
  * @Descripttion: 头部注释
  */
 import { uniqueId } from "lodash";
@@ -25,7 +25,7 @@ export const useResetForceUpdate = vm => {
 
 export const useGetOriginItem = (item) => {
     if (item.design.type === 'layout') {
-        return item.children[0].children[1]
+        return item.children[0].children[0]
     } else {
         return item.children[0].children[1]
     }

@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-07 20:44:57
- * @LastEditors: Please set LastEditors
+ * @LastEditTime  : 2021-01-08 18:01:11
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
@@ -22,11 +22,8 @@ const _useCloneFromItem = (cloneItem) => {
     useGetOriginItem(cloneItem)["id"] = onlyField;
     /// 把key也换掉
     cloneItem.children[0].children[2]['children'] = [onlyField]
-    return cloneItem
 }
 const _useClearActiveFromItem = (cloneItem) => {
-    console.log(cloneItem);
-    
     /// 删除上一个激活的activeItem类名
     useStateWithFormCreate.fApi.updateRule(cloneItem.name, {
         class: classnames('form-create-designer-widget__item')
@@ -54,38 +51,55 @@ const _useCloneItem = item => {
         /// 把key也换掉
         cloneItem.children[0].children[2]['children'] = [onlyField]
     } else {
+        /** ****************************************** ** /
+         *  1、先把item所有的集合的key，value 用dot库拍平
+         *  2、然后拿到所有的keys集合
+         *  3、循环拿到的keys集合拼接成字符串判断field的是否存在
+         *  4、如果存在就循环获取的keys，判断是否存在field并且要排除 props.list.*.fields 这种特殊情况
+         *  5、拿到field
+         *   5.1、把每一个单独的formitem field key 用 . 拆成一个数组
+         *   5.2、根据拆成的数组拿到formitem的父级 (div) 数组
+         *   5.3、再根据拆成的数据拿到formitem的父级的上层 el-col 数组
+         *   5.4、在根据获取的两个formitem（div）和 el-col key 数组转成字符串
+         *   5.5、先获取formItem（div）并且clone一份
+         */
         let keyValues = dot.flatten(cloneItem)
         let keys = Object.keys(keyValues)
         if (keys.join('.').indexOf('field') !== -1) {
-            let fieldArrays = []
-            let parentNames = []
             keys.forEach(key => {
                 if (key.indexOf('.field') !== -1 && key.indexOf('.props') === -1) {
-                    console.log(key, 'key');
-                    let namesStr = key.split('.')
-                    namesStr = namesStr.slice(0, namesStr.length - 5)
-                    let parentNameStr = namesStr.slice(0, namesStr.length - 6)
-                    namesStr = namesStr.join('.')
-                    console.log('/////////////////////////////////');
-                    console.log(parentNameStr);
-                    console.log(dot.get(cloneItem, parentNameStr));
-                    
-                    
-
-                    let _itemBox = cloneDeep(dot.get(cloneItem, namesStr))
+                    /// 拿到当前formItem（就是当前元素不包括div）的key 并且用 . 切成数组
+                    let formItemKeyPathArray = key.split('.')
+                    /// 然后取到formitem的父级（div）数组
+                    let formItemKeyParentPathArray = formItemKeyPathArray.slice(0, formItemKeyPathArray.length - 5)
+                    /// 再获取到div的上层el-col路径
+                    let parentElColNameStrArray = formItemKeyParentPathArray.slice(0, formItemKeyParentPathArray.length - 6)
+                    /// 当前的formItem（div）字符串路径
+                    let formItemKeyParentPathStr = formItemKeyParentPathArray.join('.')
+                    /// el-col的字符串路径
+                    let parentElColNameStr = parentElColNameStrArray.join('.')
+                    /// 获取 formItem（div）的 item
+                    let _itemBox = cloneDeep(dot.get(cloneItem, formItemKeyParentPathStr))
+                    /// 删除 主区域 rules 里面的当前 item
                     fApi.removeField(_itemBox.name)
-                    cloneItem = dot.set(cloneItem, namesStr.concat('.children'),[] )
-                    _itemBox = _useCloneFromItem(_itemBox)
-                    fApi.append(_itemBox, dot.get(cloneItem, parentNameStr.join('.')).name, true)
-                    cloneItem = dot.set(cloneItem, parentNameStr.join('.').concat('.children'), [_itemBox] )
+                    /// 然后在把当前cloneItem里面的formItem的children全部删掉【tools, input, key】，这里在前面已经缓存了一份 _itemBox
+                    cloneItem = dot.set(cloneItem, formItemKeyParentPathStr.concat('.children'), [])
+                    /// 更新 _itemBox 里面的规则 跟非 layout 组件一样
+                    _useCloneFromItem(_itemBox)
+                    /// 然后更新完之后在重新添加回去
+                    /// 这里要先更新主区域 rules
+                    fApi.append(_itemBox, dot.get(cloneItem, parentElColNameStr).name, true)
+                    /// 然后在更新当前的cloneItem
+                    cloneItem = dot.set(cloneItem, parentElColNameStr.concat('.children'), [_itemBox])
+                    /// 然后把当前的item掉激活类
                     _itemBox = _useClearActiveFromItem(_itemBox)
-                    parentNames.push(namesStr)
-                    fieldArrays.push(keyValues[key])
                 }
             })
         }
-        console.log(dot.flatten(item))
+        cloneItem.name = useAutoField()
+        useGetToolsBox(cloneItem)["name"] = useAutoField();
     }
+    console.log(cloneItem)
     useGetOriginItem(cloneItem)["name"] = onlyField;
     return cloneItem
 }
@@ -103,10 +117,7 @@ const _useChangeItem = ({ removed }) => {
 
 /// 当前页面激活的item
 const useSetActiveItem = (item) => {
-    console.log(item, ' useSetActiveItem - item');
-    console.log('*********');
-    console.log(useStateWithPage.activeItem, ' useStateWithPage.activeItem');
-
+    console.log('fuck', item, useStateWithPage.activeItem)
     if (useStateWithPage.activeItem) {
         /// 删除上一个激活的activeItem类名
         useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
@@ -116,20 +127,16 @@ const useSetActiveItem = (item) => {
             class: classnames('form-create-designer-widget__item__tools')
         })
     }
-    // item['class'] = classnames(item['class'], 'form-create-designer-widget__item__active')
     useStateWithFormCreate.fApi.updateRule(item.name, {
         class: classnames(item['class'], 'form-create-designer-widget__item__active')
     })
+    console.log('fuck-toolbox', useGetToolsBox(item))
     useStateWithFormCreate.fApi.updateRule(useGetToolsBox(item).name, {
         class: classnames(useGetToolsBox(item).class, 'form-create-designer-widget__item__tools__active')
     })
-    // item.children[0].children[0].class = classnames(item.children[0].children[0].class, 'form-create-designer-widget__item__tools__active')
-    // useStateWithPage.activeItem = cloneDeep(item)
     useStateWithPage.activeItem = item
-
     /// 最原始的item（这里需要优化）
     const originItem = useGetOriginItem(item)
-
     /// 去总的json表取对应的item
     const activeItemObservable$ = createConfigJsonItemFactory(originItem)
     useStateWithPage.activeItemObservable$ = activeItemObservable$
@@ -269,10 +276,12 @@ export const useInitDraggableItem = () => {
         ],
         on: {
             change: _useChangeItem,
-            add : (e) => {
+            add: (e) => {
+                console.log(e, ' base-add')
                 useSetActiveItem(e.item._underlying_vm_)
             },
             end: (e) => {
+                console.log(e, ' base-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },
@@ -313,9 +322,11 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                useSetActiveItem(e.item._underlying_vm_, 'add')
+                console.log(e, ' other-add')
+                useSetActiveItem(e.item._underlying_vm_)
             },
             end: (e) => {
+                console.log(e, ' other-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },

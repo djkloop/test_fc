@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-12 17:51:44
+ * @LastEditTime  : 2021-01-12 18:22:35
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -83,17 +83,19 @@ const _useCloneItem = item => {
                     /// 获取 formItem（div）的 item
                     let _itemBox = cloneDeep(dot.get(cloneItem, formItemKeyParentPathStr))
                     /// 删除 主区域 rules 里面的当前 item
-                    // fApi.removeField(_itemBox.name)
-                    // fApi.removeField(_itemBox.name)
+                    console.log(_itemBox.name)
+                    fApi.removeField(_itemBox.name)
+                    console.log(fApi.fields())
                     /// 然后在把当前cloneItem里面的formItem的children全部删掉【tools, input, key】，这里在前面已经缓存了一份 _itemBox
-                    cloneItem = dot.set(cloneItem, formItemKeyParentPathStr.concat('.children'), [])
+                    // cloneItem = dot.set(cloneItem, formItemKeyParentPathStr.concat('.children'), [])
                     /// 更新 _itemBox 里面的规则 跟非 layout 组件一样
                     _useCloneFromItem(_itemBox)
                     /// 然后更新完之后在重新添加回去
                     /// 这里要先更新主区域 rules
-                    // fApi.append(_itemBox, dot.get(cloneItem, parentElColNameStr).name, true)
+                    fApi.append(_itemBox, dot.get(cloneItem, parentElColNameStr).name, true)
+                    console.log(fApi.fields(), ' <- append')
                     /// 然后在更新当前的cloneItem
-                    cloneItem = dot.set(cloneItem, parentElColNameStr.concat('.children'), [_itemBox])
+                    // cloneItem = dot.set(cloneItem, parentElColNameStr.concat('.children'), [_itemBox])
                     console.log(parentCol,  dot.get(cloneItem, parentElColNameStr).name, '@@@@@@@@@@@@@');
                     /// 然后把当前的item掉激活类
                     // _itemBox = _useClearActiveFromItem(_itemBox)
@@ -116,9 +118,10 @@ const _useCloneItem = item => {
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
 const _useChangeItem = ({ removed }) => {
     if (removed) {
-        console.log('remove方法')
-        if (removed.element && (removed.element.field)) {
-            useStateWithFormCreate.fApi.removeField(removed.element.field)
+        const item = useGetOriginItem(removed.element)
+        console.log(item, ' item removed')
+        if (removed.element && (item.field || item.name)) {
+            useStateWithFormCreate.fApi.removeField(item.field || item.name)
         }
     }
 }

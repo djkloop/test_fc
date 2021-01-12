@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-12 19:38:38
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2021-01-12 22:42:31
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
+ * @FilePath     : /test_fc/src/components/form-create-designer-config/index.vue
 -->
 <template>
   <form-create v-model="fApi" :rule="rules" :option="options" />
@@ -37,13 +37,12 @@ export default {
         const { target_field } = fApi.getRule(e)
         /// 主区域的item
         let item = mainFapi.getRule(target_field)
+        // const keys = target.split('.')
         console.log('getRule -> ', item)
-        item = dot.set(item, fApi.getRule(e).target, fApi.getRule(e).value)
-        mainFapi.mergeRule(target_field, item)
+        // set(item[keys[0]], keys[1], fApi.getRule(e).value)
+        dot.set(item, fApi.getRule(e).target, fApi.getRule(e).value)
+        mainFapi.updateRule(target_field, item)
         console.log('mainRule -> ', mainFapi.getRule(target_field))
-        setTimeout(() => {
-          mainFapi.refresh()
-        }, 300)
       })
     })
     watch(() => props.activeModelWithConfigItem, (v) => {

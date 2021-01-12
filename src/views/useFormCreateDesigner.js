@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-12 18:22:35
+ * @LastEditTime  : 2021-01-12 18:35:11
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -120,6 +120,7 @@ const _useChangeItem = ({ removed }) => {
     if (removed) {
         const item = useGetOriginItem(removed.element)
         console.log(item, ' item removed')
+        console.log(item.name, item.field, ' item removed')
         if (removed.element && (item.field || item.name)) {
             useStateWithFormCreate.fApi.removeField(item.field || item.name)
         }

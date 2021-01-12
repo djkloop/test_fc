@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:07:50
- * @LastEditTime: 2021-01-08 20:41:42
- * @LastEditors: Please set LastEditors
+ * @LastEditTime  : 2021-01-12 16:05:46
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { uniqueId } from "lodash";
@@ -23,12 +23,10 @@ export const useResetForceUpdate = vm => {
     vm.$forceUpdate()
 }
 
-export const useGetOriginItem = (item) => {
-    if (item.design.type === 'layout') {
-        return item.children[0].children[0]
-    } else {
-        return item.children[0].children[1]
-    }
+/// 去掉 useCommonWrapper 加的元素
+/// 获取真实的转换规则
+export const useGetOriginItem = (item, pos = 1) => {
+    return item.children[0].children[pos]
 }
 
 export const useGetToolsBox = item => {

@@ -1,8 +1,8 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-06 16:23:52
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-01-12 17:26:14
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -20,11 +20,7 @@ import {
 export default {
   name: 'FormCreateDesignerConfig',
   props: {
-    configItemJson: {
-      type: Object,
-      default: () => ({})
-    },
-    activeItemObservable$: {
+    activeModelWithConfigItem: {
       type: Object
     },
     mainFapi: {
@@ -37,7 +33,6 @@ export default {
       const { mainFapi } = props
       const { fApi } = useStateWithFormCreate
       fApi.on('change', e => {
-        console.log(e, ' e')
         /// 先获取到主区域的item的key
         const { target_field } = fApi.getRule(e)
         /// 主区域的item
@@ -46,9 +41,10 @@ export default {
         mainFapi.updateRule(target_field, item)
       })
     })
-    watch(() => props.activeItemObservable$, (v) => {
+    watch(() => props.activeModelWithConfigItem, (v) => {
       if (v.field) {
-        useStateWithFormCreate.rules = v.observerConfigItem$.value[v.field]
+        console.log(v)
+        useStateWithFormCreate.rules = v.rightAllRules[v.field]
       }
     }, {
       immediate: false

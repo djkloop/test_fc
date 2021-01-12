@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-08 20:36:37
- * @LastEditors: Please set LastEditors
+ * @LastEditTime  : 2021-01-12 17:21:06
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
@@ -11,7 +11,7 @@ import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from
 import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
 import classnames from 'classnames'
-import { createConfigJsonItemFactory } from '@/packages/store'
+import { createConfigJsonItemFactory } from '@/libs/useFormCreateStore'
 import * as dot from 'dot-wild';
 
 const _useCloneFromItem = (cloneItem) => {
@@ -104,7 +104,7 @@ const _useCloneItem = item => {
     }
     console.log('_useCloneItem success===========================1');
     console.log(cloneItem);
-    
+
     useGetOriginItem(cloneItem)["name"] = onlyField;
 
     return cloneItem
@@ -121,32 +121,64 @@ const _useChangeItem = ({ removed }) => {
     }
 }
 
+/**
+ * 内部 formitem 组件激活方法
+ */
+const _useSetFormItemActiveItem = item => {
+    const { fApi } = useStateWithFormCreate
+    /// 然后在给当前的item加active类名
+    fApi.updateRule(item.name, {
+        class: classnames(item['class'], 'form-create-designer-widget__item__active')
+    })
+        /// 给tool加类名
+        fApi.updateRule(useGetToolsBox(item).name, {
+        class: classnames(useGetToolsBox(item).class, 'form-create-designer-widget__item__tools__active')
+    })
+}
+
+/**
+ * 内部 layout 组件激活方法
+ */
+const _useSetLayoutActiveItem = item => {
+    const { fApi } = useStateWithFormCreate
+    /// 然后在给当前的item加active类名
+    fApi.updateRule(item.name, {
+        class: classnames(item['class'], 'form-create-designer-widget__item__active')
+    })
+
+    /// 给tool加类名
+    fApi.updateRule(useGetToolsBox(item).name, {
+        class: classnames(useGetToolsBox(item).class, 'form-create-designer-widget__item__tools__active')
+    })
+
+}
+
+
 /// 当前页面激活的item
 const useSetActiveItem = (item) => {
-    console.log('useSetActiveItem success===========================2');
-    // console.log('fuck', item, useStateWithPage.activeItem)
+    console.log('useSetActiveItem success===========================2', item);
+    /// 删除上一个激活的activeItem类名
     if (useStateWithPage.activeItem) {
-        /// 删除上一个激活的activeItem类名
         useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
             class: classnames('form-create-designer-widget__item')
         })
-        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.children[0].children[0].name, {
+        useStateWithFormCreate.fApi.updateRule(useGetToolsBox(useStateWithPage.activeItem).name, {
             class: classnames('form-create-designer-widget__item__tools')
         })
     }
-    useStateWithFormCreate.fApi.updateRule(item.name, {
-        class: classnames(item['class'], 'form-create-designer-widget__item__active')
-    })
-    console.log('fuck-toolbox', useGetToolsBox(item))
-    useStateWithFormCreate.fApi.updateRule(useGetToolsBox(item).name, {
-        class: classnames(useGetToolsBox(item).class, 'form-create-designer-widget__item__tools__active')
-    })
+
+    /// 这里 表单组件 和 布局组件 有区别
+    if (item.design.type === 'layout') {
+        _useSetLayoutActiveItem(item)
+    } else {
+        _useSetFormItemActiveItem(item)
+    }
+
+    /// 设置当前激活的item
     useStateWithPage.activeItem = item
-    /// 最原始的item（这里需要优化）
-    const originItem = useGetOriginItem(item)
-    /// 去总的json表取对应的item
-    const activeItemObservable$ = createConfigJsonItemFactory(originItem)
-    useStateWithPage.activeItemObservable$ = activeItemObservable$
+    /// 去总的type json表取对应的item所对应的类型
+    const activeRightConfigJson = createConfigJsonItemFactory(item)
+    useStateWithPage.activeModelWithConfigItem = activeRightConfigJson
 }
 
 const useWrapperChildren = item => {
@@ -169,8 +201,8 @@ const useWrapperChildren = item => {
         ]
     }
     const relayChildren = item
-    children.push(rightTools)
-    children.push(relayChildren)
+    children.push(rightTools) /// 工具区
+    children.push(relayChildren) /// 真实的元素
     /// 如果是表单组件需要生成底部key
     if (item.design.type !== 'layout' ) {
         const selfId = useAutoField()
@@ -190,6 +222,8 @@ const useWrapperChildren = item => {
 }
 
 /// 统一的外层样式标签
+/// 这里在每个item上面加了2层dom
+/// 取最原始的item的时候要去掉这2层
 const useCommonWrapper = item => {
     return {
         type: 'div',

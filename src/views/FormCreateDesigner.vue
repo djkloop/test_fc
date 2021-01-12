@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-05 12:18:19
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-01-12 17:20:56
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/views/FormCreateDesigner.vue
+ * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
 -->
 <style lang="scss">
 @import '@/assets/reset.sass';
@@ -58,7 +58,7 @@
         </el-main>
         <el-aside width="350px">
           <div class="form-create-designer-config">
-            <form-create-designer-config :main-fapi="fApi" :config-item-json="activeItem" :active-item-observable$="activeItemObservable$" />
+            <form-create-designer-config :main-fapi="fApi" :active-model-with-config-item="activeModelWithConfigItem" />
           </div>
         </el-aside>
       </el-container>

@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-12 18:35:11
+ * @LastEditTime  : 2021-01-12 18:54:55
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -18,7 +18,6 @@ const _useCloneFromItem = (cloneItem) => {
     const onlyField = useAutoField();
     useGetOriginItem(cloneItem)['prev_field'] = useGetOriginItem(cloneItem).field
     useGetOriginItem(cloneItem)["field"] = onlyField;
-    useGetOriginItem(cloneItem)["title"] = onlyField;
     useGetOriginItem(cloneItem)["id"] = onlyField;
     /// 把key也换掉
     cloneItem.children[0].children[2]['children'] = [onlyField]

@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime  : 2021-01-12 17:43:57
+ * @LastEditTime  : 2021-01-12 19:01:43
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -30,6 +30,9 @@ export const useTransferRow = (item) => {
   item["type"] = "el-row";
   item["class"] = classnames(item.class, "form-create-designer-widget__row");
   item["name"] = useAutoField();
+  item['attrs'] = {}
+  item['props'] = {}
+  item['style'] = {}
   item["children"] = [
     {
       type: "el-col",

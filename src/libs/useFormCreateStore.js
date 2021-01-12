@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-12 17:38:12
+ * @LastEditTime  : 2021-01-12 17:45:42
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -71,7 +71,6 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
   /// 布局组件要可以设置底部的el-col
   /// 所以要继续循环rule
   let cloneConfigJsonArray = cloneDeep(this.configAllTypeJson[type]) || []
-  console.log(field, name, fcd_origin_item)
   const _field = field || name
   if (cloneConfigJsonArray.length) {
     ///

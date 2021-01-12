@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-12 17:44:18
+ * @LastEditTime  : 2021-01-12 17:51:44
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -66,6 +66,7 @@ const _useCloneItem = item => {
         let keyValues = dot.flatten(cloneItem)
         let keys = Object.keys(keyValues)
         if (keys.join('.').indexOf('field') !== -1) {
+            console.log('fuck_fuck')
             keys.forEach(key => {
                 if (key.indexOf('.field') !== -1 && key.indexOf('.props') === -1) {
                     /// 拿到当前formItem（就是当前元素不包括div）的key 并且用 . 切成数组
@@ -115,6 +116,7 @@ const _useCloneItem = item => {
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
 const _useChangeItem = ({ removed }) => {
     if (removed) {
+        console.log('remove方法')
         if (removed.element && (removed.element.field)) {
             useStateWithFormCreate.fApi.removeField(removed.element.field)
         }

@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-12 17:26:14
+ * @LastEditTime  : 2021-01-12 17:36:24
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -43,11 +43,11 @@ export default {
     })
     watch(() => props.activeModelWithConfigItem, (v) => {
       if (v.field) {
-        console.log(v)
         useStateWithFormCreate.rules = v.rightAllRules[v.field]
       }
     }, {
-      immediate: false
+      immediate: false,
+      deep: true
     })
     return {
       ...toRefs(useStateWithFormCreate),

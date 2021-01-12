@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime: 2021-01-05 15:26:35
- * @LastEditors: Please set LastEditors
+ * @LastEditTime  : 2021-01-12 17:43:57
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField } from "@/libs/useUtils";
@@ -29,6 +29,7 @@ export const useTransferInput = (item) => {
 export const useTransferRow = (item) => {
   item["type"] = "el-row";
   item["class"] = classnames(item.class, "form-create-designer-widget__row");
+  item["name"] = useAutoField();
   item["children"] = [
     {
       type: "el-col",

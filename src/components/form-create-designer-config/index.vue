@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-12 18:44:39
+ * @LastEditTime  : 2021-01-12 19:38:38
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -13,7 +13,6 @@
 <script>
 import { onMounted, toRefs, watch } from '@vue/composition-api'
 // import { filter, map } from 'rxjs/operators'
-import { cloneDeep } from 'lodash'
 import * as dot from 'dot-wild';
 import {
   useStateWithFormCreate
@@ -37,11 +36,14 @@ export default {
         /// 先获取到主区域的item的key
         const { target_field } = fApi.getRule(e)
         /// 主区域的item
-        let item = cloneDeep(mainFapi.getRule(target_field))
+        let item = mainFapi.getRule(target_field)
         console.log('getRule -> ', item)
         item = dot.set(item, fApi.getRule(e).target, fApi.getRule(e).value)
-        mainFapi.updateRule(target_field, item)
-        console.log('getRule -> ', mainFapi.getRule(target_field))
+        mainFapi.mergeRule(target_field, item)
+        console.log('mainRule -> ', mainFapi.getRule(target_field))
+        setTimeout(() => {
+          mainFapi.refresh()
+        }, 300)
       })
     })
     watch(() => props.activeModelWithConfigItem, (v) => {

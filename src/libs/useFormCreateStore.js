@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-12 17:45:42
+ * @LastEditTime  : 2021-01-13 14:46:46
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -50,7 +50,7 @@ Mediator.prototype.setDefaultTypeJsonTemplate = function (defaultTemplate) {
 /**
  * 扩展自定义组建的时候需要设置对应的type模板
  *
- * @param {Obecjt} extendTemplate 自定义组件typjson
+ * @param {Object} extendTemplate 自定义组件typjson
  */
 Mediator.prototype.extendTypeJsonTemplate = function (extendTemplate) {
   if (isPlainObject(extendTemplate)) {

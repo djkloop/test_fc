@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-13 15:12:29
+ * @LastEditTime  : 2021-01-13 16:01:35
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -12,9 +12,7 @@
 
 <script>
 import { onMounted, toRefs, watch } from '@vue/composition-api'
-// import { filter, map } from 'rxjs/operators'
-// import * as dot from 'dot-wild';
-import { Path } from 'cool-path'
+import { set as dSet } from 'dot-values2'
 import { cloneDeep } from 'lodash'
 import {
   useStateWithFormCreate
@@ -41,7 +39,7 @@ export default {
         let item = mainFapi.getRule(target_field)
         const cloneItem = cloneDeep(item)
         console.log('getRule -> ', item)
-        const _item = Path.setIn(cloneItem, fApi.getRule(e).target, fApi.getRule(e).value)
+        const _item = dSet(cloneItem, fApi.getRule(e).target, fApi.getRule(e).value)
         console.log(_item, ' ___')
         mainFapi.updateRule(target_field, _item)
         console.log('mainRule -> ', mainFapi.getRule(target_field))

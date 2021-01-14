@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime : 2021-01-14 22:40:37
+ * @LastEditTime : 2021-01-14 23:14:31
  * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
@@ -35,13 +35,13 @@ const _useClickDelete = () => {
     const rightItem = useGetOriginItem(useStateWithPage.activeItem)
     const rightName = rightItem.field || rightItem.name
     /// 先把主区域删了
-    console.log(useStateWithPage.activeItem, rightItem)
     fApi.removeField(name)
     const storeFactory = getConfigJsonFactory()
     /// 去store里面删掉对应的对象
     storeFactory.removeModelWithConfigItem(rightName)
     /// 再去把右边的删了
     rightFApi.reload([])
+    /// 如果下面还有其它item，激活其它的item
 }
 
 /**
@@ -49,6 +49,14 @@ const _useClickDelete = () => {
  * @param {*} item 
  */
 const _useClickCopy = () => {
+    /// ...
+    const originItem = useGetOriginItem(useStateWithPage.activeItem)
+    const cloneDeepOriginItem = cloneDeep(originItem)
+    const deletProps = ['field', 'name', 'value', '_id']
+    deletProps.forEach(prop => {
+        Reflect.deleteProperty(cloneDeepOriginItem, prop)
+    })
+    useNavClickCloneItem(cloneDeepOriginItem)
 }
 
 /// clone 时触发的事件
@@ -288,7 +296,7 @@ export const useNavCloneItem = item => {
 };
 
 /// 点击左侧列表触发的事件
-export const useNavClickCloneItem = item => {
+export const useNavClickCloneItem = (item) => {
     /// 如果当前没有被激活的item说明是主区域没有任何元素
     const _cloneItem = useNavCloneItem(item)
     const cloneItem = _useCloneItem(_cloneItem)
@@ -334,11 +342,11 @@ export const useInitDraggableItem = () => {
             add: (e) => {
                 console.log(e, ' base-add')
                 useSetActiveItem(e.item._underlying_vm_)
+            },
+            end: (e) => {
+                console.log(e, ' base-end')
+                useSetActiveItem(e.item._underlying_vm_)
             }
-            // end: (e) => {
-            //     console.log(e, ' base-end')
-            //     useSetActiveItem(e.item._underlying_vm_)
-            // }
         },
     });
     /// 初始化的时候需要一个空的拖拽列表
@@ -378,6 +386,10 @@ export const useWrapperDrag = () => {
             change: _useChangeItem,
             add: (e) => {
                 console.log(e, ' other-add')
+                useSetActiveItem(e.item._underlying_vm_)
+            },
+            end: (e) => {
+                console.log(e, ' other-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },

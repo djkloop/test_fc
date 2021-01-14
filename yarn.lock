@@ -846,10 +846,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@djkloop/fffff_pppp@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@djkloop/fffff_pppp/-/fffff_pppp-0.0.3.tgz#7e6aba17fc0047d776278392562c3d929c5bbb3f"
-  integrity sha512-3JrejJKbQJtxiAefcpLqLT5zphOXsXFGFMI2C/ecoAQ4EVDd+2pHLAKZGHZQhinnKpbuDVYCG/3Cx/+2ZkSMbA==
+"@djkloop/fffff_pppp@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.npm.taobao.org/@djkloop/fffff_pppp/download/@djkloop/fffff_pppp-0.0.4.tgz#048f5f1ac0037a7f8ede59e60f9882a0de1ecb65"
+  integrity sha1-BI9fGsADen+O3lnmD5iCoN4ey2U=
 
 "@hapi/address@2.x.x":
   version "2.1.4"

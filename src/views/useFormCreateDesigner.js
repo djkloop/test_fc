@@ -1,17 +1,18 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-12 18:54:55
- * @LastEditors   : djkloop
+ * @LastEditTime : 2021-01-14 22:40:37
+ * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
 import { cloneDeep } from "lodash";
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
+import { useStateWithFormCreate as useStateWithRight } from "@/components/form-create-designer-config/useState";
 import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
 import classnames from 'classnames'
-import { createConfigJsonItemFactory } from '@/libs/useFormCreateStore'
+import { createConfigJsonItemFactory, getConfigJsonFactory } from '@/libs/useFormCreateStore'
 import * as dot from 'dot-wild';
 
 const _useCloneFromItem = (cloneItem) => {
@@ -22,16 +23,34 @@ const _useCloneFromItem = (cloneItem) => {
     /// 把key也换掉
     cloneItem.children[0].children[2]['children'] = [onlyField]
 }
-// const _useClearActiveFromItem = (cloneItem) => {
-//     /// 删除上一个激活的activeItem类名
-//     useStateWithFormCreate.fApi.updateRule(cloneItem.name, {
-//         class: classnames('form-create-designer-widget__item')
-//     })
-//     useStateWithFormCreate.fApi.updateRule(cloneItem.children[0].children[0].name, {
-//         class: classnames('form-create-designer-widget__item__tools')
-//     })
-//     return cloneItem
-// }
+
+/**
+ * 删除当前的item
+ * @param {*} item 
+ */
+const _useClickDelete = () => {
+    const { fApi } = useStateWithFormCreate
+    const { fApi: rightFApi } = useStateWithRight
+    const name = useStateWithPage.activeItem.name
+    const rightItem = useGetOriginItem(useStateWithPage.activeItem)
+    const rightName = rightItem.field || rightItem.name
+    /// 先把主区域删了
+    console.log(useStateWithPage.activeItem, rightItem)
+    fApi.removeField(name)
+    const storeFactory = getConfigJsonFactory()
+    /// 去store里面删掉对应的对象
+    storeFactory.removeModelWithConfigItem(rightName)
+    /// 再去把右边的删了
+    rightFApi.reload([])
+}
+
+/**
+ * 拷贝当前的元素
+ * @param {*} item 
+ */
+const _useClickCopy = () => {
+}
+
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
@@ -78,37 +97,21 @@ const _useCloneItem = item => {
                     let formItemKeyParentPathStr = formItemKeyParentPathArray.join('.')
                     /// el-col的字符串路径
                     let parentElColNameStr = parentElColNameStrArray.join('.')
-                    const parentCol = fApi.getRule(dot.get(cloneItem, parentElColNameStr).name)
                     /// 获取 formItem（div）的 item
                     let _itemBox = cloneDeep(dot.get(cloneItem, formItemKeyParentPathStr))
                     /// 删除 主区域 rules 里面的当前 item
-                    console.log(_itemBox.name)
                     fApi.removeField(_itemBox.name)
-                    console.log(fApi.fields())
-                    /// 然后在把当前cloneItem里面的formItem的children全部删掉【tools, input, key】，这里在前面已经缓存了一份 _itemBox
-                    // cloneItem = dot.set(cloneItem, formItemKeyParentPathStr.concat('.children'), [])
                     /// 更新 _itemBox 里面的规则 跟非 layout 组件一样
                     _useCloneFromItem(_itemBox)
                     /// 然后更新完之后在重新添加回去
                     /// 这里要先更新主区域 rules
                     fApi.append(_itemBox, dot.get(cloneItem, parentElColNameStr).name, true)
-                    console.log(fApi.fields(), ' <- append')
                     /// 然后在更新当前的cloneItem
-                    // cloneItem = dot.set(cloneItem, parentElColNameStr.concat('.children'), [_itemBox])
-                    console.log(parentCol,  dot.get(cloneItem, parentElColNameStr).name, '@@@@@@@@@@@@@');
-                    /// 然后把当前的item掉激活类
-                    // _itemBox = _useClearActiveFromItem(_itemBox)
                 }
             })
         }
-        // cloneItem.name = useAutoField()
-        // useGetToolsBox(cloneItem)["name"] = useAutoField();
     }
-    console.log('_useCloneItem success===========================1');
-    console.log(cloneItem);
-
     useGetOriginItem(cloneItem)["name"] = onlyField;
-
     return cloneItem
 }
 
@@ -161,7 +164,6 @@ const _useSetLayoutActiveItem = item => {
 
 /// 当前页面激活的item
 const useSetActiveItem = (item) => {
-    console.log('useSetActiveItem success===========================2', item);
     /// 删除上一个激活的activeItem类名
     if (useStateWithPage.activeItem) {
         useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
@@ -197,11 +199,18 @@ const useWrapperChildren = item => {
         children: [
             {
                 type: 'i',
-                class: 'el-icon-document-copy'
+                class: 'el-icon-document-copy',
+                on: {
+                    click: () => _useClickCopy()
+                }
             },
             {
                 type: 'i',
-                class: 'el-icon-delete'
+                class: 'el-icon-delete',
+                on: {
+                    click: () => _useClickDelete()
+                },
+                native: true
             }
         ]
     }
@@ -325,11 +334,11 @@ export const useInitDraggableItem = () => {
             add: (e) => {
                 console.log(e, ' base-add')
                 useSetActiveItem(e.item._underlying_vm_)
-            },
-            end: (e) => {
-                console.log(e, ' base-end')
-                useSetActiveItem(e.item._underlying_vm_)
             }
+            // end: (e) => {
+            //     console.log(e, ' base-end')
+            //     useSetActiveItem(e.item._underlying_vm_)
+            // }
         },
     });
     /// 初始化的时候需要一个空的拖拽列表
@@ -369,10 +378,6 @@ export const useWrapperDrag = () => {
             change: _useChangeItem,
             add: (e) => {
                 console.log(e, ' other-add')
-                useSetActiveItem(e.item._underlying_vm_)
-            },
-            end: (e) => {
-                console.log(e, ' other-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },

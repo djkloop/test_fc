@@ -1,10 +1,10 @@
 /*
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-13 14:46:46
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2021-01-14 22:28:57
  * @Description  : 头部注释
- * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
+ * @FilePath     : /test_fc/src/libs/useFormCreateStore.js
  */
 import { reactive } from '@vue/composition-api'
 import { cloneDeep, isPlainObject } from 'lodash'
@@ -122,6 +122,14 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
     field: _field,
     rightAllRules: this.configItems
   }
+}
+
+Mediator.prototype.getModelWithConfigItem = function (name) {
+  return this.configItems[name]
+}
+
+Mediator.prototype.removeModelWithConfigItem = function (key) {
+  return Reflect.deleteProperty(this.configItems, key)
 }
 
 

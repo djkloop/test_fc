@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors  : djkloop
- * @LastEditTime : 2021-01-14 22:28:57
+ * @LastEditTime : 2021-01-14 23:36:35
  * @Description  : 头部注释
  * @FilePath     : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -97,8 +97,9 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
         /// 最后返回出当前的type-json合并到总的数组里面去拍平
         const chidlrenCloneConfigJsonArray = cloneDeep(this.configAllTypeJson[childreConfigJsonItem.type]) || []
         if (Array.isArray(chidlrenCloneConfigJsonArray) && chidlrenCloneConfigJsonArray.length) {
-          chidlrenCloneConfigJsonArray.forEach(chidlrenCloneConfigItem => {
+          chidlrenCloneConfigJsonArray.forEach((chidlrenCloneConfigItem) => {
             chidlrenCloneConfigItem['field'] = useAutoField()
+            chidlrenCloneConfigItem['title'] = `第${index+1}个${chidlrenCloneConfigItem['title']}`
             /// el-col组件因为是布局组件没有field，所有它的tagrt_filed是组件的name
             chidlrenCloneConfigItem['target_field'] = childreConfigJsonItem.name
             if (dot.has(childreConfigJsonItem, chidlrenCloneConfigItem.target)) {

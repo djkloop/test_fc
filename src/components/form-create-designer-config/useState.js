@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:13:07
  * @LastEditors  : djkloop
- * @LastEditTime : 2020-12-30 22:40:00
+ * @LastEditTime : 2021-01-14 23:40:29
  * @Description   : 头部注释
  * @FilePath     : /test_fc/src/components/form-create-designer-config/useState.js
  */
@@ -16,9 +16,9 @@ export const useStateWithFormCreate = reactive({
       resetBtn: false,
       form: {
           col: false,
-          size: 'small',
+          size: 'mini',
           labelPosition: 'left',
-          labelWidth: '80px'
+          labelWidth: '125px'
       }
   }
 });

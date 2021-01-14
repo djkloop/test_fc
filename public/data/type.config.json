@@ -62,9 +62,19 @@
       {
         "type": "InputNumber",
         "title": "栅格span",
+        
         "value": 0,
         "target": "props.span",
         "label": "栅格span"
+      },
+      {
+        "type": "InputNumber",
+        "title": "间隔格数",
+        "props": {
+          "min": 0
+        },
+        "value": 0,
+        "target": "props.offset"
       }
     ]
   }

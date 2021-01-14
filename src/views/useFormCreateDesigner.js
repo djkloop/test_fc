@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime : 2021-01-14 23:14:31
+ * @LastEditTime : 2021-01-14 23:34:14
  * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
@@ -56,6 +56,8 @@ const _useClickCopy = () => {
     deletProps.forEach(prop => {
         Reflect.deleteProperty(cloneDeepOriginItem, prop)
     })
+    /// TODO: 需要把子组件一块复制了？
+    console.log(cloneDeepOriginItem)
     useNavClickCloneItem(cloneDeepOriginItem)
 }
 

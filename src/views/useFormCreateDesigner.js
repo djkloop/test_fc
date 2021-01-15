@@ -1,10 +1,11 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime : 2021-01-14 23:34:14
- * @LastEditors  : djkloop
+ * @LastEditTime  : 2021-01-15 17:59:04
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
+import FormCreate from '@djkloop/fffff_pppp'
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
 import { cloneDeep } from "lodash";
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
@@ -26,7 +27,7 @@ const _useCloneFromItem = (cloneItem) => {
 
 /**
  * 删除当前的item
- * @param {*} item 
+ * @param {*} item
  */
 const _useClickDelete = () => {
     const { fApi } = useStateWithFormCreate
@@ -46,7 +47,7 @@ const _useClickDelete = () => {
 
 /**
  * 拷贝当前的元素
- * @param {*} item 
+ * @param {*} item
  */
 const _useClickCopy = () => {
     /// ...
@@ -57,7 +58,7 @@ const _useClickCopy = () => {
         Reflect.deleteProperty(cloneDeepOriginItem, prop)
     })
     /// TODO: 需要把子组件一块复制了？
-    console.log(cloneDeepOriginItem)
+    console.log(FormCreate.copyRule(useStateWithPage.activeItem), useStateWithPage.activeItem)
     useNavClickCloneItem(cloneDeepOriginItem)
 }
 
@@ -94,7 +95,6 @@ const _useCloneItem = item => {
         let keyValues = dot.flatten(cloneItem)
         let keys = Object.keys(keyValues)
         if (keys.join('.').indexOf('field') !== -1) {
-            console.log('fuck_fuck')
             keys.forEach(key => {
                 if (key.indexOf('.field') !== -1 && key.indexOf('.props') === -1) {
                     /// 拿到当前formItem（就是当前元素不包括div）的key 并且用 . 切成数组
@@ -131,8 +131,6 @@ const _useCloneItem = item => {
 const _useChangeItem = ({ removed }) => {
     if (removed) {
         const item = useGetOriginItem(removed.element)
-        console.log(item, ' item removed')
-        console.log(item.name, item.field, ' item removed')
         if (removed.element && (item.field || item.name)) {
             useStateWithFormCreate.fApi.removeField(item.field || item.name)
         }
@@ -342,11 +340,9 @@ export const useInitDraggableItem = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                console.log(e, ' base-add')
                 useSetActiveItem(e.item._underlying_vm_)
             },
             end: (e) => {
-                console.log(e, ' base-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },
@@ -387,11 +383,9 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                console.log(e, ' other-add')
                 useSetActiveItem(e.item._underlying_vm_)
             },
             end: (e) => {
-                console.log(e, ' other-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },

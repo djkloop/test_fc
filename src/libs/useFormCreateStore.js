@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors  : djkloop
- * @LastEditTime : 2021-01-14 23:36:35
+ * @LastEditTime : 2021-01-24 15:58:30
  * @Description  : 头部注释
  * @FilePath     : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -11,6 +11,22 @@ import { cloneDeep, isPlainObject } from 'lodash'
 import { useAutoField, useGetOriginItem } from './useUtils'
 import { errorCodeFunc } from './useConset'
 import * as dot from 'dot-wild'
+
+
+function _setFieldItem(_isFormItem, obj, _this) {
+  const targetProps = _isFormItem ? 'field' : 'name'
+  if (!_this.cloneItemCachKey[obj[targetProps]]) {
+    let cloneFieldProps = cloneDeep(_this.configItems[obj[targetProps]])
+    obj[targetProps] = useAutoField()
+    if (_isFormItem) {
+      obj['name'] = obj[targetProps]
+      obj['id'] = obj[targetProps]
+    }
+    cloneFieldProps = dot.set(cloneFieldProps, '*.target_field', obj[targetProps])
+    _this.configItems[obj[targetProps]] = cloneFieldProps
+    _this.cloneItemCachKey[obj[targetProps]] = true
+  }
+}
 
 /// 前期先协定成这样，后期有可能扩展每个item的属性等其它操作
 /// 暂时抽离出来
@@ -36,6 +52,8 @@ function Mediator() {
   this.configAllTypeJson = reactive({})
   /// 每一个每一个的item集合
   this.configItems = reactive({})
+  ///
+  this.cloneItemCachKey = reactive({})
 }
 
 /**
@@ -131,6 +149,65 @@ Mediator.prototype.getModelWithConfigItem = function (name) {
 
 Mediator.prototype.removeModelWithConfigItem = function (key) {
   return Reflect.deleteProperty(this.configItems, key)
+}
+
+/**
+ * 
+ * @param {*} item 当前被激活的对象（cloneDeep）
+ */
+Mediator.prototype.copyModelWithConfigItem = function (activeItem) {
+  this.__getFieldWithCopy(activeItem)
+  return activeItem
+}
+
+
+Mediator.prototype.__getFieldWithCopy = function (item) {
+  const _forEachObject = (obj) => {
+    for (const key in obj) {
+      // eslint-disable-next-line
+      if (obj.hasOwnProperty(key)) {
+        /// 判断子级是否有并且长度大于0
+        const isBreakList = [
+          'form-create-designer-widget__item__tools form-create-designer-widget__item__tools__active',
+          'form-create-designer-widget__item__tools',
+          'form-create-designer-widget__item__key',
+          'el-icon-delete', 
+          'el-icon-document-copy'
+        ]
+        /// icon
+        /// tools
+        if (isBreakList.includes(obj.class)) {
+          // obj.class = obj.class.replace('form-create-designer-widget__item__tools form-create-designer-widget__item__tools__active', 'form-create-designer-widget__item__tools')
+          break
+        }
+
+        /// 
+        if (key === 'children' && Array.isArray(obj.children) && obj.children.length) {
+          // obj.class = obj.class.replace(' form-create-designer-widget__item__active', '')
+          this.__getFieldWithCopy(obj.children)
+        } else {
+          /// 如果是item 需要去找全局的对象里面找到对应的key
+          const isFormItem = Reflect.has(obj, 'field')
+          if (isFormItem) {
+            _setFieldItem(isFormItem, obj, this)
+          } else if(obj.type === 'el-row') {
+            _setFieldItem(false, obj, this)
+          }
+        }
+      }
+    }
+  }
+
+  /// 循环子级
+  if (Array.isArray(item)) {
+    item.forEach(it => {
+      if(typeof it === 'object') {
+        _forEachObject(it)
+      }
+    })
+  } else if(Object.keys(item).length) {
+    _forEachObject(item)
+  }
 }
 
 

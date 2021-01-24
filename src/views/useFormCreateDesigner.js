@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-15 17:59:04
- * @LastEditors   : djkloop
+ * @LastEditTime : 2021-01-24 16:06:30
+ * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
 import FormCreate from '@djkloop/fffff_pppp'
@@ -23,6 +23,18 @@ const _useCloneFromItem = (cloneItem) => {
     useGetOriginItem(cloneItem)["id"] = onlyField;
     /// 把key也换掉
     cloneItem.children[0].children[2]['children'] = [onlyField]
+}
+
+const _useClearActiveClass = () => {
+    /// 删除上一个激活的activeItem类名
+    if (useStateWithPage.activeItem) {
+        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
+            class: classnames('form-create-designer-widget__item')
+        })
+        useStateWithFormCreate.fApi.updateRule(useGetToolsBox(useStateWithPage.activeItem).name, {
+            class: classnames('form-create-designer-widget__item__tools')
+        })
+    }
 }
 
 /**
@@ -58,10 +70,14 @@ const _useClickCopy = () => {
         Reflect.deleteProperty(cloneDeepOriginItem, prop)
     })
     /// TODO: 需要把子组件一块复制了？
-    console.log(FormCreate.copyRule(useStateWithPage.activeItem), useStateWithPage.activeItem)
-    useNavClickCloneItem(cloneDeepOriginItem)
-}
 
+
+    /// 
+    const copyActiveItem = FormCreate.copyRule(useStateWithPage.activeItem)
+    const copyItem = getConfigJsonFactory().copyModelWithConfigItem(copyActiveItem)
+    useStateWithFormCreate.fApi.append(copyItem, useStateWithPage.activeItem.name)
+    _useClearActiveClass()
+}
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
@@ -133,6 +149,8 @@ const _useChangeItem = ({ removed }) => {
         const item = useGetOriginItem(removed.element)
         if (removed.element && (item.field || item.name)) {
             useStateWithFormCreate.fApi.removeField(item.field || item.name)
+            /// 去数据集合删除
+            getConfigJsonFactory().removeModelWithConfigItem(item.field || item.name)
         }
     }
 }
@@ -173,14 +191,7 @@ const _useSetLayoutActiveItem = item => {
 /// 当前页面激活的item
 const useSetActiveItem = (item) => {
     /// 删除上一个激活的activeItem类名
-    if (useStateWithPage.activeItem) {
-        useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
-            class: classnames('form-create-designer-widget__item')
-        })
-        useStateWithFormCreate.fApi.updateRule(useGetToolsBox(useStateWithPage.activeItem).name, {
-            class: classnames('form-create-designer-widget__item__tools')
-        })
-    }
+    _useClearActiveClass()
 
     /// 这里 表单组件 和 布局组件 有区别
     if (item.design.type === 'layout') {
@@ -297,7 +308,6 @@ export const useNavCloneItem = item => {
 
 /// 点击左侧列表触发的事件
 export const useNavClickCloneItem = (item) => {
-    /// 如果当前没有被激活的item说明是主区域没有任何元素
     const _cloneItem = useNavCloneItem(item)
     const cloneItem = _useCloneItem(_cloneItem)
     if (!useStateWithPage.activeItem) {

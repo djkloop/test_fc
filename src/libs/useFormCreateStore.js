@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors  : djkloop
- * @LastEditTime : 2021-01-24 15:58:30
+ * @LastEditTime : 2021-01-24 18:22:58
  * @Description  : 头部注释
  * @FilePath     : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -10,6 +10,8 @@ import { reactive } from '@vue/composition-api'
 import { cloneDeep, isPlainObject } from 'lodash'
 import { useAutoField, useGetOriginItem } from './useUtils'
 import { errorCodeFunc } from './useConset'
+import { useStateWithPage, useStateWithFormCreate } from '@/views/useState'
+import { useSetActiveItem } from '@/views/useFormCreateDesigner'
 import * as dot from 'dot-wild'
 
 
@@ -26,6 +28,22 @@ function _setFieldItem(_isFormItem, obj, _this) {
     _this.configItems[obj[targetProps]] = cloneFieldProps
     _this.cloneItemCachKey[obj[targetProps]] = true
   }
+}
+
+function _setCommonEvent(obj) {
+  /// TODO: 想办法抽出去。
+  Object.assign(obj, {
+    on: {
+        click: (e) => {
+            e.stopPropagation()
+            if (useStateWithPage.activeItem.name !== obj.name) {
+                let _field = obj.field || obj.name
+                const _item = useStateWithFormCreate.fApi.getRule(_field)
+                useSetActiveItem(_item)
+            }
+        }
+    }
+})
 }
 
 /// 前期先协定成这样，后期有可能扩展每个item的属性等其它操作
@@ -157,7 +175,11 @@ Mediator.prototype.removeModelWithConfigItem = function (key) {
  */
 Mediator.prototype.copyModelWithConfigItem = function (activeItem) {
   this.__getFieldWithCopy(activeItem)
-  return activeItem
+  this.cloneItemCachKey = {}
+  return {
+    copyItem: activeItem,
+    rightAllRules: this.configItems
+  }
 }
 
 
@@ -177,13 +199,17 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
         /// icon
         /// tools
         if (isBreakList.includes(obj.class)) {
-          // obj.class = obj.class.replace('form-create-designer-widget__item__tools form-create-designer-widget__item__tools__active', 'form-create-designer-widget__item__tools')
+          if (obj.type !== 'el-row') {
+            Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
+          }
           break
         }
 
-        /// 
         if (key === 'children' && Array.isArray(obj.children) && obj.children.length) {
-          // obj.class = obj.class.replace(' form-create-designer-widget__item__active', '')
+          /// 判断下el-row
+          if (obj.type !== 'el-row') {
+            Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
+          }
           this.__getFieldWithCopy(obj.children)
         } else {
           /// 如果是item 需要去找全局的对象里面找到对应的key
@@ -192,6 +218,12 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
             _setFieldItem(isFormItem, obj, this)
           } else if(obj.type === 'el-row') {
             _setFieldItem(false, obj, this)
+            _setCommonEvent(obj)
+          } else if(obj.design && obj.design.type === 'form') {
+            Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
+            _setCommonEvent(obj)
+          } else {
+            Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
           }
         }
       }

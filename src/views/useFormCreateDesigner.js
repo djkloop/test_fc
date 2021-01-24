@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime : 2021-01-24 16:06:30
+ * @LastEditTime : 2021-01-24 18:17:06
  * @LastEditors  : djkloop
  * @Descripttion: 头部注释
  */
@@ -57,6 +57,22 @@ const _useClickDelete = () => {
     /// 如果下面还有其它item，激活其它的item
 }
 
+
+export const useCommonEvent = (item) => {
+    return Object.assign({}, item, {
+        on: {
+            click: (e) => {
+                e.stopPropagation()
+                if (useStateWithPage.activeItem.name !== item.name) {
+                    let _field = item.field || item.name
+                    const _item = useStateWithFormCreate.fApi.getRule(_field)
+                    useSetActiveItem(_item)
+                }
+            }
+        }
+    })
+}
+
 /**
  * 拷贝当前的元素
  * @param {*} item
@@ -69,14 +85,15 @@ const _useClickCopy = () => {
     deletProps.forEach(prop => {
         Reflect.deleteProperty(cloneDeepOriginItem, prop)
     })
-    /// TODO: 需要把子组件一块复制了？
-
-
-    /// 
+    /// 复制
     const copyActiveItem = FormCreate.copyRule(useStateWithPage.activeItem)
-    const copyItem = getConfigJsonFactory().copyModelWithConfigItem(copyActiveItem)
-    useStateWithFormCreate.fApi.append(copyItem, useStateWithPage.activeItem.name)
+    let { copyItem } = getConfigJsonFactory().copyModelWithConfigItem(copyActiveItem)
     _useClearActiveClass()
+    copyItem = useCommonEvent(copyItem)
+    useStateWithFormCreate.fApi.append(copyItem, useStateWithPage.activeItem.name)
+    useStateWithPage.activeItem = copyItem
+    const _item = useStateWithFormCreate.fApi.getRule(copyItem.name)
+    useSetActiveItem(_item)
 }
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
@@ -147,6 +164,7 @@ const _useCloneItem = item => {
 const _useChangeItem = ({ removed }) => {
     if (removed) {
         const item = useGetOriginItem(removed.element)
+        /// TODO: 删除的时候激活上一个
         if (removed.element && (item.field || item.name)) {
             useStateWithFormCreate.fApi.removeField(item.field || item.name)
             /// 去数据集合删除
@@ -189,7 +207,7 @@ const _useSetLayoutActiveItem = item => {
 
 
 /// 当前页面激活的item
-const useSetActiveItem = (item) => {
+export const useSetActiveItem = (item) => {
     /// 删除上一个激活的activeItem类名
     _useClearActiveClass()
 
@@ -220,7 +238,10 @@ const useWrapperChildren = item => {
                 type: 'i',
                 class: 'el-icon-document-copy',
                 on: {
-                    click: () => _useClickCopy()
+                    click: e => {
+                        e.stopPropagation()
+                        _useClickCopy()
+                    }
                 }
             },
             {
@@ -273,20 +294,6 @@ const useCommonWrapper = item => {
     }
 }
 
-const useCommonEvent = (item) => {
-    return Object.assign({}, item, {
-        on: {
-            click: function(e) {
-                e.stopPropagation()
-                if (useStateWithPage.activeItem.name !== item.name) {
-                    let _field = item.field || item.name
-                    const _item = useStateWithFormCreate.fApi.getRule(_field)
-                    useSetActiveItem(_item)
-                }
-            }
-        }
-    })
-}
 /// 左侧列表拖拽触发clone事件
 export const useNavCloneItem = item => {
     let cloneItem = cloneDeep(item);

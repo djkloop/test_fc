@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-13 16:01:35
+ * @LastEditors  : djkloop
+ * @LastEditTime : 2021-01-24 16:49:59
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
+ * @FilePath     : /test_fc/src/components/form-create-designer-config/index.vue
 -->
 <template>
   <form-create v-model="fApi" :rule="rules" :option="options" />

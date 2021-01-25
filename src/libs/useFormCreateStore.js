@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-25 15:27:26
+ * @LastEditTime  : 2021-01-25 17:10:59
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -10,7 +10,7 @@ import { reactive } from '@vue/composition-api'
 import { cloneDeep, isPlainObject } from 'lodash'
 import { useAutoField, useGetOriginItem } from './useUtils'
 import { errorCodeFunc } from './useConset'
-import { useCommonEventWithClick } from './useCommonEvent'
+import { useCommonEventWithClick, useCommonEvnetWithDraggable } from './useCommonEvent'
 import * as dot from 'dot-wild'
 
 
@@ -199,14 +199,18 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
           const isFormItem = Reflect.has(obj, 'field')
           if (isFormItem) {
             _setFieldItem(isFormItem, obj, this)
-          } else if(obj.type === 'el-row') {
+          } else if(key === 'type' && obj.type === 'el-row') {
             _setFieldItem(false, obj, this)
-          } else if(obj.design && obj.design.type === 'form') {
+          } else if(key === 'design' && obj.design && obj.design.type === 'form') {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
             useCommonEventWithClick(obj, true)
-          } else if (obj.design && obj.design.type === 'layout') {
+          } else if (key === 'design' && obj.design && obj.design.type === 'layout') {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
             useCommonEventWithClick(obj, true)
+          } else if (key === 'type' && obj.type === 'draggable') {
+            Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
+            Reflect.deleteProperty(obj.props, 'clone')
+            useCommonEvnetWithDraggable(obj, true)
           } else {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
           }

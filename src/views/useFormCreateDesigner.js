@@ -1,30 +1,24 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-25 15:32:14
+ * @LastEditTime  : 2021-01-25 17:12:40
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import FormCreate from '@djkloop/fffff_pppp'
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
-import { cloneDeep } from "lodash";
-import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState";
-import { useStateWithFormCreate as useStateWithRight } from "@/components/form-create-designer-config/useState";
-import { useTransferRow, useTransferInput } from "./useTransfer";
-import { reactive, ref } from "@vue/composition-api";
+import { cloneDeep } from "lodash"
+import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState"
+import { useStateWithFormCreate as useStateWithRight } from "@/components/form-create-designer-config/useState"
+import { useTransferRow, useTransferInput } from "./useTransfer"
+import { reactive, ref } from "@vue/composition-api"
 import classnames from 'classnames'
 import { createConfigJsonItemFactory, getConfigJsonFactory } from '@/libs/useFormCreateStore'
 import { useCommonEventWithClick } from '@/libs/useCommonEvent'
-import * as dot from 'dot-wild';
+import { useCloneFromItem } from '@/libs/useCommonRules'
+import * as dot from 'dot-wild'
 
-const _useCloneFromItem = (cloneItem) => {
-    const onlyField = useAutoField();
-    useGetOriginItem(cloneItem)['prev_field'] = useGetOriginItem(cloneItem).field
-    useGetOriginItem(cloneItem)["field"] = onlyField;
-    useGetOriginItem(cloneItem)["id"] = onlyField;
-    /// 把key也换掉
-    cloneItem.children[0].children[2]['children'] = [onlyField]
-}
+
 
 const _useClearActiveClass = () => {
     /// 删除上一个激活的activeItem类名
@@ -82,6 +76,7 @@ const _useClickCopy = () => {
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
+    console.log('main-clone')
     const { fApi } = useStateWithFormCreate
     /******************************************* */
     /* clone 的时候一定要深拷贝 要不然一堆bug         */
@@ -129,7 +124,7 @@ const _useCloneItem = item => {
                     /// 删除 主区域 rules 里面的当前 item
                     fApi.removeField(_itemBox.name)
                     /// 更新 _itemBox 里面的规则 跟非 layout 组件一样
-                    _useCloneFromItem(_itemBox)
+                    useCloneFromItem(_itemBox)
                     /// 然后更新完之后在重新添加回去
                     /// 这里要先更新主区域 rules
                     fApi.append(_itemBox, dot.get(cloneItem, parentElColNameStr).name, true)
@@ -146,6 +141,7 @@ const _useCloneItem = item => {
 /// change 时触发的事件
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
 const _useChangeItem = ({ removed }) => {
+    console.log('main-change')
     console.log(removed)
     if (removed) {
         const item = useGetOriginItem(removed.element)
@@ -385,10 +381,11 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                console.log('other-add', e)
+                console.log('main-add')
                 useSetActiveItem(e.item._underlying_vm_)
             },
             end: (e) => {
+                console.log('main-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },

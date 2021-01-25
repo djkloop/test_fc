@@ -1,8 +1,8 @@
 /*
  * @Author        : djkloop
  * @Date          : 2021-01-25 14:53:36
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-25 17:15:54
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-01-25 19:05:50
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/libs/useCommonEvent.js
  */
@@ -135,7 +135,7 @@ const _useCommonEventWithDraggableClone = item => {
 }
 
  export const useCommonEvnetWithDraggable = (item, isSelf) => {
-  item.props.list = cloneDeep(item.props.list)
+  // item.props.list = cloneDeep(item.props.list)
   isSelf ? Object.assign(item, {
     props: {
       ...item.props,

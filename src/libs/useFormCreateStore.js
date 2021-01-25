@@ -1,8 +1,8 @@
 /*
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-25 17:10:59
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-01-25 19:25:32
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -169,6 +169,9 @@ Mediator.prototype.copyModelWithConfigItem = function (activeItem) {
 
 Mediator.prototype.__getFieldWithCopy = function (item) {
   const _forEachObject = (obj) => {
+    const _obj = cloneDeep(obj)
+    console.log(_obj.type, _obj.children, _obj.on,'type----------------------B');
+    console.log(obj.type, obj.children, obj.on,'type----------------------A');
     for (const key in obj) {
       // eslint-disable-next-line
       if (obj.hasOwnProperty(key)) {
@@ -211,12 +214,15 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
             Reflect.deleteProperty(obj.props, 'clone')
             useCommonEvnetWithDraggable(obj, true)
+            obj.props.list = _forEachObject(obj.children[0].children)
+            console.log(obj.props.list ,'obj.props.list ');
           } else {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
           }
         }
       }
     }
+    return obj
   }
 
   /// 循环子级

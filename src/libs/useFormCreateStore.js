@@ -1,8 +1,8 @@
 /*
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
- * @LastEditors  : djkloop
- * @LastEditTime : 2021-01-24 18:22:58
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-01-25 11:08:50
  * @Description  : 头部注释
  * @FilePath     : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -204,8 +204,8 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
           }
           break
         }
-
         if (key === 'children' && Array.isArray(obj.children) && obj.children.length) {
+          console.log(key, obj.children, obj.type);
           /// 判断下el-row
           if (obj.type !== 'el-row') {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
@@ -220,6 +220,9 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
             _setFieldItem(false, obj, this)
             _setCommonEvent(obj)
           } else if(obj.design && obj.design.type === 'form') {
+            Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
+            _setCommonEvent(obj)
+          } else if (obj.design && obj.design.type === 'layout') {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
             _setCommonEvent(obj)
           } else {

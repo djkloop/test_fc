@@ -1,8 +1,8 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime: 2021-01-25 11:08:57
- * @LastEditors: Please set LastEditors
+ * @LastEditTime  : 2021-01-25 15:32:14
+ * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import FormCreate from '@djkloop/fffff_pppp'
@@ -14,6 +14,7 @@ import { useTransferRow, useTransferInput } from "./useTransfer";
 import { reactive, ref } from "@vue/composition-api";
 import classnames from 'classnames'
 import { createConfigJsonItemFactory, getConfigJsonFactory } from '@/libs/useFormCreateStore'
+import { useCommonEventWithClick } from '@/libs/useCommonEvent'
 import * as dot from 'dot-wild';
 
 const _useCloneFromItem = (cloneItem) => {
@@ -56,23 +57,6 @@ const _useClickDelete = () => {
     rightFApi.reload([])
     /// 如果下面还有其它item，激活其它的item
 }
-
-
-export const useCommonEvent = (item) => {
-    return Object.assign({}, item, {
-        on: {
-            click: (e) => {
-                e.stopPropagation()
-                if (useStateWithPage.activeItem.name !== item.name) {
-                    let _field = item.field || item.name
-                    const _item = useStateWithFormCreate.fApi.getRule(_field)
-                    useSetActiveItem(_item)
-                }
-            }
-        }
-    })
-}
-
 /**
  * 拷贝当前的元素
  * @param {*} item
@@ -89,7 +73,7 @@ const _useClickCopy = () => {
     const copyActiveItem = FormCreate.copyRule(useStateWithPage.activeItem)
     let { copyItem } = getConfigJsonFactory().copyModelWithConfigItem(copyActiveItem)
     _useClearActiveClass()
-    copyItem = useCommonEvent(copyItem)
+    copyItem = useCommonEventWithClick(copyItem)
     useStateWithFormCreate.fApi.append(copyItem, useStateWithPage.activeItem.name)
     useStateWithPage.activeItem = copyItem
     const _item = useStateWithFormCreate.fApi.getRule(copyItem.name)
@@ -162,6 +146,7 @@ const _useCloneItem = item => {
 /// change 时触发的事件
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
 const _useChangeItem = ({ removed }) => {
+    console.log(removed)
     if (removed) {
         const item = useGetOriginItem(removed.element)
         /// TODO: 删除的时候激活上一个
@@ -309,7 +294,7 @@ export const useNavCloneItem = item => {
             break;
     }
     cloneItem = useCommonWrapper(cloneItem)
-    cloneItem = useCommonEvent(cloneItem)
+    cloneItem = useCommonEventWithClick(cloneItem)
     return cloneItem;
 };
 
@@ -400,6 +385,7 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
+                console.log('other-add', e)
                 useSetActiveItem(e.item._underlying_vm_)
             },
             end: (e) => {

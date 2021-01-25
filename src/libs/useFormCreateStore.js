@@ -1,17 +1,16 @@
 /*
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 11:08:50
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-01-25 15:27:26
  * @Description  : 头部注释
- * @FilePath     : /test_fc/src/libs/useFormCreateStore.js
+ * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
 import { reactive } from '@vue/composition-api'
 import { cloneDeep, isPlainObject } from 'lodash'
 import { useAutoField, useGetOriginItem } from './useUtils'
 import { errorCodeFunc } from './useConset'
-import { useStateWithPage, useStateWithFormCreate } from '@/views/useState'
-import { useSetActiveItem } from '@/views/useFormCreateDesigner'
+import { useCommonEventWithClick } from './useCommonEvent'
 import * as dot from 'dot-wild'
 
 
@@ -23,27 +22,12 @@ function _setFieldItem(_isFormItem, obj, _this) {
     if (_isFormItem) {
       obj['name'] = obj[targetProps]
       obj['id'] = obj[targetProps]
+      obj['title'] = obj[targetProps]
     }
     cloneFieldProps = dot.set(cloneFieldProps, '*.target_field', obj[targetProps])
     _this.configItems[obj[targetProps]] = cloneFieldProps
     _this.cloneItemCachKey[obj[targetProps]] = true
   }
-}
-
-function _setCommonEvent(obj) {
-  /// TODO: 想办法抽出去。
-  Object.assign(obj, {
-    on: {
-        click: (e) => {
-            e.stopPropagation()
-            if (useStateWithPage.activeItem.name !== obj.name) {
-                let _field = obj.field || obj.name
-                const _item = useStateWithFormCreate.fApi.getRule(_field)
-                useSetActiveItem(_item)
-            }
-        }
-    }
-})
 }
 
 /// 前期先协定成这样，后期有可能扩展每个item的属性等其它操作
@@ -170,7 +154,7 @@ Mediator.prototype.removeModelWithConfigItem = function (key) {
 }
 
 /**
- * 
+ *
  * @param {*} item 当前被激活的对象（cloneDeep）
  */
 Mediator.prototype.copyModelWithConfigItem = function (activeItem) {
@@ -193,7 +177,7 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
           'form-create-designer-widget__item__tools form-create-designer-widget__item__tools__active',
           'form-create-designer-widget__item__tools',
           'form-create-designer-widget__item__key',
-          'el-icon-delete', 
+          'el-icon-delete',
           'el-icon-document-copy'
         ]
         /// icon
@@ -205,7 +189,6 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
           break
         }
         if (key === 'children' && Array.isArray(obj.children) && obj.children.length) {
-          console.log(key, obj.children, obj.type);
           /// 判断下el-row
           if (obj.type !== 'el-row') {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
@@ -218,13 +201,12 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
             _setFieldItem(isFormItem, obj, this)
           } else if(obj.type === 'el-row') {
             _setFieldItem(false, obj, this)
-            _setCommonEvent(obj)
           } else if(obj.design && obj.design.type === 'form') {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
-            _setCommonEvent(obj)
+            useCommonEventWithClick(obj, true)
           } else if (obj.design && obj.design.type === 'layout') {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
-            _setCommonEvent(obj)
+            useCommonEventWithClick(obj, true)
           } else {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
           }

@@ -1,8 +1,8 @@
 /*
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-25 19:25:32
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-01-26 11:40:39
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -158,20 +158,33 @@ Mediator.prototype.removeModelWithConfigItem = function (key) {
  * @param {*} item 当前被激活的对象（cloneDeep）
  */
 Mediator.prototype.copyModelWithConfigItem = function (activeItem) {
+  /// 开始拷贝
   this.__getFieldWithCopy(activeItem)
+  /// 拷贝完成需要处理特殊的标签
   this.cloneItemCachKey = {}
+  this.__setDraggableProps([activeItem])
   return {
     copyItem: activeItem,
     rightAllRules: this.configItems
   }
 }
 
+Mediator.prototype.__setDraggableProps = function (list) {
+  const len = list.length
+  for (let i = 0; i < len; i++) {
+    const ele = list[i]
+    if (ele.children && ele.children.length) {
+      if (ele.type && ele.type === 'draggable') {
+        ele.props.list = ele.children[0].children
+      }
+      this.__setDraggableProps(ele.children)
+    }
+  }
+}
+
 
 Mediator.prototype.__getFieldWithCopy = function (item) {
   const _forEachObject = (obj) => {
-    const _obj = cloneDeep(obj)
-    console.log(_obj.type, _obj.children, _obj.on,'type----------------------B');
-    console.log(obj.type, obj.children, obj.on,'type----------------------A');
     for (const key in obj) {
       // eslint-disable-next-line
       if (obj.hasOwnProperty(key)) {
@@ -214,8 +227,6 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
             Reflect.deleteProperty(obj.props, 'clone')
             useCommonEvnetWithDraggable(obj, true)
-            obj.props.list = _forEachObject(obj.children[0].children)
-            console.log(obj.props.list ,'obj.props.list ');
           } else {
             Reflect.has(obj, 'name') ?  obj.name = useAutoField() : ''
           }

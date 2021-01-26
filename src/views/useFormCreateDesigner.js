@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-25 17:12:40
+ * @LastEditTime  : 2021-01-26 11:18:17
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -76,7 +76,6 @@ const _useClickCopy = () => {
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
-    console.log('main-clone')
     const { fApi } = useStateWithFormCreate
     /******************************************* */
     /* clone 的时候一定要深拷贝 要不然一堆bug         */
@@ -141,8 +140,6 @@ const _useCloneItem = item => {
 /// change 时触发的事件
 /// 拖拽的时候如果发生了删除事件需要把rule里面的相对应的规则删除
 const _useChangeItem = ({ removed }) => {
-    console.log('main-change')
-    console.log(removed)
     if (removed) {
         const item = useGetOriginItem(removed.element)
         /// TODO: 删除的时候激活上一个
@@ -381,11 +378,9 @@ export const useWrapperDrag = () => {
         on: {
             change: _useChangeItem,
             add: (e) => {
-                console.log('main-add')
                 useSetActiveItem(e.item._underlying_vm_)
             },
             end: (e) => {
-                console.log('main-end')
                 useSetActiveItem(e.item._underlying_vm_)
             }
         },

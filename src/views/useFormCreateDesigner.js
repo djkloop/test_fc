@@ -23,8 +23,9 @@ import * as dot from 'dot-wild'
 const _useClearActiveClass = () => {
     /// 删除上一个激活的activeItem类名
     if (useStateWithPage.activeItem) {
+        const { design } = useStateWithPage.activeItem
         useStateWithFormCreate.fApi.updateRule(useStateWithPage.activeItem.name, {
-            class: classnames('form-create-designer-widget__item')
+            class: classnames('form-create-designer-widget__item', design.type === 'layout' && 'form-create-designer-widget__layout')
         })
         useStateWithFormCreate.fApi.updateRule(useGetToolsBox(useStateWithPage.activeItem).name, {
             class: classnames('form-create-designer-widget__item__tools')
@@ -50,6 +51,7 @@ const _useClickDelete = () => {
     /// 再去把右边的删了
     rightFApi.reload([])
     /// 如果下面还有其它item，激活其它的item
+    if(!useStateWithDraggables.mainList.length) useStateWithPage.activeItem = null
 }
 /**
  * 拷贝当前的元素
@@ -239,7 +241,10 @@ const useWrapperChildren = item => {
                 type: 'i',
                 class: 'el-icon-delete',
                 on: {
-                    click: () => _useClickDelete()
+                    click: e => {
+                        e.stopPropagation()
+                        _useClickDelete()
+                    }
                 },
                 native: true
             }
@@ -275,7 +280,7 @@ const useCommonWrapper = item => {
         name: useAutoField(),
         design: item.design,
         config_rule: item.config_rule,
-        class: classnames('form-create-designer-widget__item'),
+        class: classnames('form-create-designer-widget__item', item.design.type === 'layout' && 'form-create-designer-widget__layout'),
         children: [{
             type: 'div',
             name: useAutoField(),
@@ -309,10 +314,14 @@ export const useNavClickCloneItem = (item) => {
     const _cloneItem = useNavCloneItem(item)
     const cloneItem = _useCloneItem(_cloneItem)
     if (!useStateWithPage.activeItem) {
+        console.log('act');
+        
         useStateWithDraggables.mainList.push(cloneItem)
     } else {
         /// 否则就在当前激活的activeItem后面添加
         useStateWithFormCreate.fApi.append(cloneItem, useStateWithPage.activeItem.name)
+        console.log('here');
+        
     }
     /// 保证动画执行正确
     setTimeout(() => {

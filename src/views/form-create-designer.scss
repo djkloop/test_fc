@@ -17,16 +17,24 @@
         min-height: 60px;
       }
 
-
       &__list {
         height: 100%;
+        
         &.form-create-designer-main__draggable__nested__list {
           min-height: 60px;
         }
       }
     }
   }
-
+  // 行内样式
+  .el-form--inline {
+    .form-create-designer-main__draggable__list{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-content: flex-start;
+    }
+  }
   /// 组件的样式
   &-widget {
     &__list {
@@ -81,6 +89,9 @@
       min-width: 50px;
       border: 1px dashed #ccc;
       background: #fff;
+    }
+    &__layout {
+      width:  100%;
     }
 
     &__item {

@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime  : 2021-01-12 19:01:43
+ * @LastEditTime  : 2021-02-02 17:53:26
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -20,6 +20,9 @@ export const useTransferInput = (item) => {
   item["field"] = onlyField;
   item["title"] = onlyField;
   item["id"] = onlyField;
+  item['validate'] =[
+      { required: true, message: '请输入goods_name', trigger: 'blur' },
+  ]
 };
 
 /// 抹平左侧列表组件到form-create的row规则

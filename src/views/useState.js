@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2021-02-02 15:42:27
+ * @LastEditTime  : 2021-02-02 18:09:37
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -45,7 +45,20 @@ export const useStateWithFormCreate = reactive({
         form: {
             col: false,
             inline: false,
+            labelPosition: 'right',
+            hideRequiredAsterisk: false,
+            labelWidth: '125px',
+            showMessage: true,
+            inlineMessage: false,
+            statusIcon: false,
+            validateOnRuleChange: true,
+            disabled: false,
             size: 'small'
+        },
+        info: {
+            // 提示消息类型,popover,tooltip
+            type: 'popover',
+            placement: 'bottom'
         }
     }
 });

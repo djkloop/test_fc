@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-02 15:42:02
+ * @LastEditTime  : 2021-02-02 18:05:53
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
 -->
@@ -137,7 +137,75 @@
               是否是行内模式：
             </div>
             <div class="form-create-config-drawer__global__item_content">
-              <el-switch v-model="options.form.inline"></el-switch>
+              <el-switch v-model="options.form.inline" size="mini"></el-switch>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              标签的位置：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-radio-group v-model="options.form.labelPosition" size="mini">
+                <el-radio-button label="right">right</el-radio-button>
+                <el-radio-button label="left">left</el-radio-button>
+                <el-radio-button label="top">top</el-radio-button>
+              </el-radio-group>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              是否显示必填星号：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-switch v-model="options.form.hideRequiredAsterisk" size="mini"></el-switch>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              label全局宽度：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-input v-model="options.form.labelWidth" size="mini"></el-input>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              是否显示校验信息：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-switch v-model="options.form.showMessage" size="mini"></el-switch>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              行内显示校验信息：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-switch v-model="options.form.inlineMessage" size="mini"></el-switch>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              是否行显示校验图标：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-switch v-model="options.form.statusIcon" size="mini"></el-switch>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              是否懒验证：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-switch v-model="options.form.validateOnRuleChange" size="mini"></el-switch>
+            </div>
+          </div>
+          <div class="form-create-config-drawer__global__item">
+            <div class="form-create-config-drawer__global__item_title">
+              是否置灰：
+            </div>
+            <div class="form-create-config-drawer__global__item_content">
+              <el-switch v-model="options.form.disabled" size="mini"></el-switch>
             </div>
           </div>
         </el-scrollbar>

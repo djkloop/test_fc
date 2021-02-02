@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2021-02-02 14:38:41
+ * @LastEditTime  : 2021-02-02 15:42:27
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -58,7 +58,7 @@ export const useStateWithPage = reactive({
     vm: null,
     activeItem: null,
     activeModelWithConfigItem: null,
-    closeDrawer: true
+    closeDrawer: false
 })
 
 export const useStateWithDraggables = reactive({

@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-21 16:09:07
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-02 15:28:45
+ * @LastEditTime  : 2021-02-02 15:42:02
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/views/FormCreateDesigner.vue
 -->
@@ -125,6 +125,7 @@
             </div>
             <div class="form-create-config-drawer__global__item_content">
               <el-radio-group v-model="options.form.size" size="mini">
+                <el-radio-button label="large">特大</el-radio-button>
                 <el-radio-button label="medium">中等</el-radio-button>
                 <el-radio-button label="small">小</el-radio-button>
                 <el-radio-button label="mini">迷你</el-radio-button>
@@ -151,13 +152,12 @@
 </template>
 
 <script>
-import { defineComponent, toRefs, getCurrentInstance, watch } from "@vue/composition-api";
+import { defineComponent, toRefs, getCurrentInstance } from "@vue/composition-api";
 import {
   useNavCloneItem,
   useNavClickCloneItem,
   useInitDraggableItem,
   useConfigClose,
-  useRefreshOptions,
   useSetVM
 } from "./useFormCreateDesigner";
 import {
@@ -176,11 +176,6 @@ export default defineComponent({
     useInitDraggableItem()
     /// 设置当前的上下文 vm
     useSetVM(proxy)
-
-    watch(() => useStateWithFormCreate.options, useRefreshOptions, {
-      immediate:false,
-      deep: true
-    })
 
     return {
       ...toRefs(useStateWithFormCreate),

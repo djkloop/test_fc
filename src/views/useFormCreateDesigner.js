@@ -1,13 +1,13 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-02-02 15:30:26
+ * @LastEditTime  : 2021-02-02 15:42:20
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import FormCreate from '@djkloop/fffff_pppp'
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
-import { cloneDeep, isEmpty } from "lodash"
+import { cloneDeep } from "lodash"
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState"
 import { useStateWithFormCreate as useStateWithRight } from "@/components/form-create-designer-config/useState"
 import { useTransferRow, useTransferInput } from "./useTransfer"
@@ -409,14 +409,6 @@ export const useSetEmptyStatus = (isShow) => {
 
 export const useConfigClose = (done) => {
     done()
-}
-
-export const useRefreshOptions = () => {
-    const { fApi } = useStateWithFormCreate
-    console.log(isEmpty(fApi), fApi)
-    if (!isEmpty(fApi)) {
-        fApi.refreshOptions()
-    }
 }
 
 

@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2021-01-12 17:21:22
+ * @LastEditTime  : 2021-02-02 14:38:41
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -44,17 +44,21 @@ export const useStateWithFormCreate = reactive({
         resetBtn: false,
         form: {
             col: false,
+            inline: false,
             size: 'small'
         }
     }
 });
 
 
+
+
 export const useStateWithPage = reactive({
     isShowEmpty: true,
     vm: null,
     activeItem: null,
-    activeModelWithConfigItem: null
+    activeModelWithConfigItem: null,
+    closeDrawer: true
 })
 
 export const useStateWithDraggables = reactive({

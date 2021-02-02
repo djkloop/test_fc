@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-29 16:43:05
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-04 15:58:08
+ * @LastEditTime  : 2021-02-02 11:22:57
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-header/index.vue
 -->
@@ -22,12 +22,12 @@
 
 <script>
 import { toRefs } from '@vue/composition-api'
-import { useFetchAllConfigJsonTemplate, useHeaderState } from './useFormCreateDesignerHeader'
+import { useFetchAllConfigJsonTemplate } from './useFormCreateDesignerHeader'
+import { useHeaderState } from './useState'
 export default {
   name: 'form-create-designer-header',
   setup() {
     useFetchAllConfigJsonTemplate()
-
     return {
       ...toRefs(useHeaderState),
       useFetchAllConfigJsonTemplate

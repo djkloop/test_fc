@@ -2,15 +2,12 @@
  * @Author        : djkloop
  * @Date          : 2020-12-31 15:41:38
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-12 16:56:45
+ * @LastEditTime  : 2021-02-02 11:21:50
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-header/useFormCreateDesignerHeader.js
  */
-import { reactive } from '@vue/composition-api'
 import { getConfigJsonFactory } from '@/libs/useFormCreateStore'
-export const useHeaderState = reactive({
-  loading: true
-})
+import { useHeaderState } from './useState'
 
  export const useFetchAllConfigJsonTemplate = () => {
    try {

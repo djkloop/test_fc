@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors  : djkloop
- * @LastEditTime : 2021-01-24 16:49:59
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-02-02 14:16:25
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/components/form-create-designer-config/index.vue
+ * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
 <template>
   <form-create v-model="fApi" :rule="rules" :option="options" />
@@ -38,11 +38,8 @@ export default {
         /// 主区域的item
         let item = mainFapi.getRule(target_field)
         const cloneItem = cloneDeep(item)
-        console.log('getRule -> ', item)
         const _item = dSet(cloneItem, fApi.getRule(e).target, fApi.getRule(e).value)
-        console.log(_item, ' ___')
         mainFapi.updateRule(target_field, _item)
-        console.log('mainRule -> ', mainFapi.getRule(target_field))
       })
     })
     watch(() => props.activeModelWithConfigItem, (v) => {

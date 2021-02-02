@@ -1,13 +1,13 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-01-26 12:03:55
+ * @LastEditTime  : 2021-02-02 15:30:26
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import FormCreate from '@djkloop/fffff_pppp'
 import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/libs/useUtils"
-import { cloneDeep } from "lodash"
+import { cloneDeep, isEmpty } from "lodash"
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState"
 import { useStateWithFormCreate as useStateWithRight } from "@/components/form-create-designer-config/useState"
 import { useTransferRow, useTransferInput } from "./useTransfer"
@@ -15,8 +15,8 @@ import { reactive, ref } from "@vue/composition-api"
 import classnames from 'classnames'
 import { createConfigJsonItemFactory, getConfigJsonFactory } from '@/libs/useFormCreateStore'
 import { useCommonEventWithClick } from '@/libs/useCommonEvent'
-// import { useCloneFromItem } from '@/libs/useCommonRules'
-// import * as dot from 'dot-wild'
+import { useCloneFromItem } from '@/libs/useCommonRules'
+import * as dot from 'dot-wild'
 
 
 
@@ -74,20 +74,19 @@ const _useClickCopy = () => {
     useSetActiveItem(_item)
 }
 
-
-function __replaceFieldWithFormItem(list) {
-    const len = list.length
-    for (let o = 0; o < len; o++) {
-        const element = list[o];
-        console.log(element)
-    }
-}
+/// TODO: 重构复制嵌套逻辑
+// function __replaceFieldWithFormItem(list) {
+//     const len = list.length
+//     for (let o = 0; o < len; o++) {
+//         const element = list[o];
+//         console.log(element)
+//     }
+// }
 
 /// clone 时触发的事件
 /// 嵌套的拖拽列表和最外层的拖拽列表都处理相同的逻辑
 const _useCloneItem = item => {
-    console.time()
-    // const { fApi } = useStateWithFormCreate
+    const { fApi } = useStateWithFormCreate
     /******************************************* */
     /* clone 的时候一定要深拷贝 要不然一堆bug         */
     /******************************************* */
@@ -114,40 +113,39 @@ const _useCloneItem = item => {
          *   5.4、在根据获取的两个formitem（div）和 el-col key 数组转成字符串
          *   5.5、先获取formItem（div）并且clone一份
          */
-        __replaceFieldWithFormItem([cloneItem])
-        // let keyValues = dot.flatten(cloneItem)
-        // let keys = Object.keys(keyValues)
-        // console.log(keys.length)
-        // if (keys.join('.').indexOf('field') !== -1) {
-        //     console.log('__>')
-        //     keys.forEach(key => {
-        //         if (key.indexOf('.field') !== -1 && key.indexOf('.props') === -1) {
-        //             /// 拿到当前formItem（就是当前元素不包括div）的key 并且用 . 切成数组
-        //             let formItemKeyPathArray = key.split('.')
-        //             /// 然后取到formitem的父级（div）数组
-        //             let formItemKeyParentPathArray = formItemKeyPathArray.slice(0, formItemKeyPathArray.length - 5)
-        //             /// 再获取到div的上层el-col路径
-        //             let parentElColNameStrArray = formItemKeyParentPathArray.slice(0, formItemKeyParentPathArray.length - 6)
-        //             /// 当前的formItem（div）字符串路径
-        //             let formItemKeyParentPathStr = formItemKeyParentPathArray.join('.')
-        //             /// el-col的字符串路径
-        //             let parentElColNameStr = parentElColNameStrArray.join('.')
-        //             /// 获取 formItem（div）的 item
-        //             let _itemBox = cloneDeep(dot.get(cloneItem, formItemKeyParentPathStr))
-        //             /// 删除 主区域 rules 里面的当前 item
-        //             fApi.removeField(_itemBox.name)
-        //             /// 更新 _itemBox 里面的规则 跟非 layout 组件一样
-        //             useCloneFromItem(_itemBox)
-        //             /// 然后更新完之后在重新添加回去
-        //             /// 这里要先更新主区域 rules
-        //             fApi.append(_itemBox, dot.get(cloneItem, parentElColNameStr).name, true)
-        //             /// 然后在更新当前的cloneItem
-        //         }
-        //     })
-        // }
+        // __replaceFieldWithFormItem([cloneItem])
+        let keyValues = dot.flatten(cloneItem)
+        let keys = Object.keys(keyValues)
+        console.log(keys.length)
+        if (keys.join('.').indexOf('field') !== -1) {
+            console.log('__>')
+            keys.forEach(key => {
+                if (key.indexOf('.field') !== -1 && key.indexOf('.props') === -1) {
+                    /// 拿到当前formItem（就是当前元素不包括div）的key 并且用 . 切成数组
+                    let formItemKeyPathArray = key.split('.')
+                    /// 然后取到formitem的父级（div）数组
+                    let formItemKeyParentPathArray = formItemKeyPathArray.slice(0, formItemKeyPathArray.length - 5)
+                    /// 再获取到div的上层el-col路径
+                    let parentElColNameStrArray = formItemKeyParentPathArray.slice(0, formItemKeyParentPathArray.length - 6)
+                    /// 当前的formItem（div）字符串路径
+                    let formItemKeyParentPathStr = formItemKeyParentPathArray.join('.')
+                    /// el-col的字符串路径
+                    let parentElColNameStr = parentElColNameStrArray.join('.')
+                    /// 获取 formItem（div）的 item
+                    let _itemBox = cloneDeep(dot.get(cloneItem, formItemKeyParentPathStr))
+                    /// 删除 主区域 rules 里面的当前 item
+                    fApi.removeField(_itemBox.name)
+                    /// 更新 _itemBox 里面的规则 跟非 layout 组件一样
+                    useCloneFromItem(_itemBox)
+                    /// 然后更新完之后在重新添加回去
+                    /// 这里要先更新主区域 rules
+                    fApi.append(_itemBox, dot.get(cloneItem, parentElColNameStr).name, true)
+                    /// 然后在更新当前的cloneItem
+                }
+            })
+        }
     }
     useGetOriginItem(cloneItem)["name"] = onlyField;
-    console.timeEnd()
     return cloneItem
 }
 
@@ -407,6 +405,18 @@ export const useSetVM = vm => useStateWithPage.vm = vm
 
 export const useSetEmptyStatus = (isShow) => {
     useStateWithPage.isShowEmpty = isShow
+}
+
+export const useConfigClose = (done) => {
+    done()
+}
+
+export const useRefreshOptions = () => {
+    const { fApi } = useStateWithFormCreate
+    console.log(isEmpty(fApi), fApi)
+    if (!isEmpty(fApi)) {
+        fApi.refreshOptions()
+    }
 }
 
 

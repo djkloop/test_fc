@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime  : 2021-02-02 17:53:26
+ * @LastEditTime  : 2021-02-02 18:47:34
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -24,6 +24,23 @@ export const useTransferInput = (item) => {
       { required: true, message: '请输入goods_name', trigger: 'blur' },
   ]
 };
+
+/// 抹平左侧列表到form-create的switch规则
+/// 根据不同的字段使用方案这里需要单独设计
+/// 但是需要在这个方法把form-create对应的组件规则补齐
+/// 例如form-create需要唯一的field
+
+export const useTransferSwitch= (item) => {
+  item["type"] = "el-switch";
+  const onlyField = useAutoField();
+  item["field"] = onlyField;
+  item["title"] = onlyField;
+  item["id"] = onlyField;
+  item["props"] = {
+    width: 100
+  }
+};
+
 
 /// 抹平左侧列表组件到form-create的row规则
 /// 根据不同的字段使用方案这里需要单独设计

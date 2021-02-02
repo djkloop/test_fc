@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2021-02-02 18:09:37
+ * @LastEditTime  : 2021-02-02 18:27:05
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -31,6 +31,19 @@ export const useStateWithNav = reactive({
             design: {
                 type: 'form', /// 属于什么类型的组件
                 name: '输入框'
+            }
+        },
+        {
+            id: 3,
+            label: "el-switch",
+            lib_type: "switch",
+            attrs: {
+                readonly: true,
+            },
+            /// 每个组件的设计相关字段
+            design: {
+                type: 'form', /// 属于什么类型的组件
+                name: '开关'
             }
         },
     ]

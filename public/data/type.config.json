@@ -62,7 +62,7 @@
       {
         "type": "InputNumber",
         "title": "栅格span",
-        
+
         "value": 0,
         "target": "props.span",
         "label": "栅格span"
@@ -75,6 +75,29 @@
         },
         "value": 0,
         "target": "props.offset"
+      }
+    ],
+    "el-switch": [
+      {
+        "target": "attrs.disabled",
+        "label": "禁用",
+        "type":"switch",
+        "title":"禁用",
+        "value": false
+      },
+      {
+        "target": "props.width",
+        "label": "",
+        "type": "el-input-number",
+        "title":"宽度",
+        "value": 40
+      },
+      {
+        "target": "attrs.readonly",
+        "label": "可读性",
+        "type":"switch",
+        "title":"可读性",
+        "value": false
       }
     ]
   }

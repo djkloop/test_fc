@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-02-02 15:42:20
+ * @LastEditTime  : 2021-02-02 18:29:01
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -10,7 +10,7 @@ import { useAutoField, useUniqueId, useGetOriginItem, useGetToolsBox } from "@/l
 import { cloneDeep } from "lodash"
 import { useStateWithDraggables, useStateWithFormCreate, useStateWithPage } from "./useState"
 import { useStateWithFormCreate as useStateWithRight } from "@/components/form-create-designer-config/useState"
-import { useTransferRow, useTransferInput } from "./useTransfer"
+import { useTransferRow, useTransferInput, useTransferSwitch } from "./useTransfer"
 import { reactive, ref } from "@vue/composition-api"
 import classnames from 'classnames'
 import { createConfigJsonItemFactory, getConfigJsonFactory } from '@/libs/useFormCreateStore'
@@ -294,12 +294,16 @@ const useCommonWrapper = item => {
 export const useNavCloneItem = item => {
     let cloneItem = cloneDeep(item);
     useUniqueId(cloneItem);
+    /// TODO: 优化key - value
     switch (cloneItem.lib_type) {
         case "row":
             useTransferRow(cloneItem);
             break;
         case "input":
             useTransferInput(cloneItem);
+            break;
+        case "switch":
+            useTransferSwitch(cloneItem);
             break;
         default:
             break;
@@ -315,13 +319,13 @@ export const useNavClickCloneItem = (item) => {
     const cloneItem = _useCloneItem(_cloneItem)
     if (!useStateWithPage.activeItem) {
         console.log('act');
-        
+
         useStateWithDraggables.mainList.push(cloneItem)
     } else {
         /// 否则就在当前激活的activeItem后面添加
         useStateWithFormCreate.fApi.append(cloneItem, useStateWithPage.activeItem.name)
         console.log('here');
-        
+
     }
     /// 保证动画执行正确
     setTimeout(() => {

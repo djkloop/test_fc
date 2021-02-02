@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-02 14:16:25
+ * @LastEditTime  : 2021-02-02 18:50:35
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -37,6 +37,7 @@ export default {
         const { target_field } = fApi.getRule(e)
         /// 主区域的item
         let item = mainFapi.getRule(target_field)
+        console.log(item)
         const cloneItem = cloneDeep(item)
         const _item = dSet(cloneItem, fApi.getRule(e).target, fApi.getRule(e).value)
         mainFapi.updateRule(target_field, _item)

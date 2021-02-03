@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-31 15:41:38
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-02 11:21:50
+ * @LastEditTime  : 2021-02-03 11:24:56
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-header/useFormCreateDesignerHeader.js
  */
@@ -23,7 +23,7 @@ import { useHeaderState } from './useState'
           getConfigJsonFactory().setDefaultTypeJsonTemplate(data.result)
           setTimeout(() => (
             useHeaderState.loading = false
-          ), 2000)
+          ), 500)
         }
       })
    } catch (error) {

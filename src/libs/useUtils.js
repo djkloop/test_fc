@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:07:50
- * @LastEditTime  : 2021-02-02 11:16:24
+ * @LastEditTime  : 2021-02-03 11:09:28
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -17,8 +17,6 @@ export const useUniqueId = (item) => {
     item._id = uniqueId("drag_key_id_");
 };
 
-/// TODO: HACK 不知道是不是bug 必须要forceUpdate
-/// 待后期修复
 export const useResetForceUpdate = vm => {
     vm.$forceUpdate()
 }

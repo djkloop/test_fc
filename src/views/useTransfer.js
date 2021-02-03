@@ -1,13 +1,15 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime  : 2021-02-02 18:47:34
+ * @LastEditTime  : 2021-02-03 11:12:33
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
 import { useAutoField } from "@/libs/useUtils";
 import classnames from "classnames";
 import { useWrapperDrag } from "./useFormCreateDesigner";
+
+///
 
 /// 抹平左侧列表到form-create的input规则
 /// 根据不同的字段使用方案这里需要单独设计
@@ -20,9 +22,7 @@ export const useTransferInput = (item) => {
   item["field"] = onlyField;
   item["title"] = onlyField;
   item["id"] = onlyField;
-  item['validate'] =[
-      { required: true, message: '请输入goods_name', trigger: 'blur' },
-  ]
+  item['validate'] = [];
 };
 
 /// 抹平左侧列表到form-create的switch规则
@@ -36,9 +36,6 @@ export const useTransferSwitch= (item) => {
   item["field"] = onlyField;
   item["title"] = onlyField;
   item["id"] = onlyField;
-  item["props"] = {
-    width: 100
-  }
 };
 
 

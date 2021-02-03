@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-01-26 11:40:39
+ * @LastEditTime  : 2021-02-03 12:16:05
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -87,13 +87,27 @@ Mediator.prototype.extendTypeJsonTemplate = function (extendTemplate) {
  */
 Mediator.prototype.createModelWithConfigItem = function (configInstance) {
   const { fcd_origin_item } = configInstance
+  const { _fc_cache_item } = configInstance
   const { type, field, name } = fcd_origin_item
+  let commonValidateRules = this.configAllTypeJson['common-validate-rules']
+  const commonRulesLast = commonValidateRules.splice(-1)
+  commonValidateRules = [commonValidateRules, commonRulesLast]
   /// 布局组件要可以设置底部的el-col
   /// 所以要继续循环rule
   let cloneConfigJsonArray = cloneDeep(this.configAllTypeJson[type]) || []
   const _field = field || name
+  if (_fc_cache_item.design.type === 'form') {
+    commonValidateRules.forEach(validateItem => {
+      validateItem.forEach(requireItem => {
+        requireItem['field'] = useAutoField()
+        requireItem['target_field'] = _field
+      })
+    })
+
+    console.log(commonValidateRules)
+  }
   if (cloneConfigJsonArray.length) {
-    ///
+    /// TODO: 抽逻辑
     cloneConfigJsonArray.forEach(cloneConfigJsonItem => {
       /// 给右边的每个rule生成field
       cloneConfigJsonItem['field'] = useAutoField()
@@ -109,6 +123,7 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
 
     /// 再来就是判断是否是布局组件如果是布局组件需要继续像下循环children 就是两个el-col
     let childrenConfigJsonArray = []
+    /// TODO: 把el-*换成通用的判断
     if (fcd_origin_item.type === 'el-row') {
       childrenConfigJsonArray = fcd_origin_item.children.map((childreConfigJsonItem, index) => {
         /// 先获取当前组件的所有子组件

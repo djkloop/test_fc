@@ -9,7 +9,7 @@
 import { reactive } from '@vue/composition-api'
 import { cloneDeep, isPlainObject } from 'lodash'
 import { useAutoField, useGetOriginItem } from './useUtils'
-import { errorCodeFunc } from './useConset'
+import { errorCodeFunc, triggerEventOptions } from './useConset'
 import { useCommonEventWithClick, useCommonEvnetWithDraggable } from './useCommonEvent'
 import * as dot from 'dot-wild'
 
@@ -79,7 +79,20 @@ Mediator.prototype.extendTypeJsonTemplate = function (extendTemplate) {
     errorCodeFunc(1001, '扩展extendTemplate报错')
   }
 }
-
+const _addField = (rules, field) => {
+  return rules.map(rule => {
+    rule['field'] = rule['validateTargetProps']
+    rule['target_field'] = field
+    if (rule['validateTargetProps'] === 'trigger') {
+      rule['options'] = triggerEventOptions
+    }
+    if (rule.type === 'group') {
+      rule['field'] = useAutoField()
+      rule.props.rules = _addField(rule.props.rules, field)
+    }
+    return rule
+  })
+}
 /**
  * 根据返回的实例去生成右边的区域
  *
@@ -90,20 +103,14 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
   const { _fc_cache_item } = configInstance
   const { type, field, name } = fcd_origin_item
   let commonValidateRules = this.configAllTypeJson['common-validate-rules']
-  const commonRulesLast = commonValidateRules.splice(-1)
-  commonValidateRules = [commonValidateRules, commonRulesLast]
+  // const commonRulesLast = commonValidateRules.splice(-1)
+  // commonValidateRules = [commonValidateRules, commonRulesLast]
   /// 布局组件要可以设置底部的el-col
   /// 所以要继续循环rule
   let cloneConfigJsonArray = cloneDeep(this.configAllTypeJson[type]) || []
   const _field = field || name
   if (_fc_cache_item.design.type === 'form') {
-    commonValidateRules.forEach(validateItem => {
-      validateItem.forEach(requireItem => {
-        requireItem['field'] = useAutoField()
-        requireItem['target_field'] = _field
-      })
-    })
-
+    commonValidateRules = _addField(commonValidateRules, _field)
     console.log(commonValidateRules)
   }
   if (cloneConfigJsonArray.length) {
@@ -148,7 +155,7 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
         }
       })
     }
-    cloneConfigJsonArray = [...cloneConfigJsonArray, ...childrenConfigJsonArray].flat(Infinity)
+    cloneConfigJsonArray = [...cloneConfigJsonArray, ...childrenConfigJsonArray, ...commonValidateRules].flat(Infinity)
   } else {
     errorCodeFunc(1000, "当前组件没有对应的属性配置JSON!")
   }

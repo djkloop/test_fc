@@ -848,8 +848,8 @@
 
 "@djkloop/fffff_pppp@^0.0.8":
   version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@djkloop/fffff_pppp/-/fffff_pppp-0.0.8.tgz#90306facf296fcb40b6f938b1d833a6c18aaf09b"
-  integrity sha512-gKw6rLf79lt80rif1t3jtfN6CpZWSM0L/dQ1xp/NjmIw1dkZfh1qExWfEE6lH3HwejhrC9OKrvGKt02VgwNsdw==
+  resolved "https://registry.npm.taobao.org/@djkloop/fffff_pppp/download/@djkloop/fffff_pppp-0.0.8.tgz#90306facf296fcb40b6f938b1d833a6c18aaf09b"
+  integrity sha1-kDBvrPKW/LQLb5OLHYM6bBiq8Js=
 
 "@hapi/address@2.x.x":
   version "2.1.4"

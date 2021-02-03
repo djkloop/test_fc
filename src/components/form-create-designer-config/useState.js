@@ -1,3 +1,11 @@
+/* 
+ * @Author       : Eug
+ * @Date         : 2021-01-15 10:36:20
+ * @LastEditTime : 2021-02-03 16:41:01
+ * @LastEditors  : Eug
+ * @Descripttion : Descripttion
+ * @FilePath     : /test_fc/src/components/form-create-designer-config/useState.js
+ */
 /*
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:13:07
@@ -17,8 +25,8 @@ export const useStateWithFormCreate = reactive({
       form: {
           col: false,
           size: 'mini',
-          labelPosition: 'left',
-          labelWidth: '125px'
+          labelPosition: 'top',
+          labelWidth: 'auto'
       }
   }
 });

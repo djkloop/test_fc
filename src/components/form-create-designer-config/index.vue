@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-03 11:45:06
+ * @LastEditors  : Eug
+ * @LastEditTime : 2021-02-03 17:17:28
  * @Description   : 头部注释
- * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
+ * @FilePath     : /test_fc/src/components/form-create-designer-config/index.vue
 -->
 <template>
   <form-create v-model="fApi" :rule="rules" :option="options" />
@@ -39,8 +39,50 @@ export default {
         let item = mainFapi.getRule(target_field)
         const cloneItem = cloneDeep(item)
         console.log(fApi.getRule(e), cloneItem)
-        const _item = dSet(cloneItem, fApi.getRule(e).target, fApi.getRule(e).value)
-        mainFapi.updateRule(target_field, _item)
+        console.log(e);
+        const rightRule = fApi.getRule(e)
+        let _item
+        if (rightRule.target === 'validate') {
+          if (rightRule.type === 'group') {
+            console.log('///',rightRule, cloneItem['validate']);
+            if (cloneItem['validate'].length) {
+              const _requiredRule = cloneItem['validate'][0]
+               cloneItem['validate'] = [_requiredRule, ...rightRule.value]
+              _item = cloneItem
+            } else {
+               cloneItem['validate'].push({
+                required: false,
+                message: '',
+                trigger: 'blur'
+              })
+              cloneItem['validate'].push(...rightRule.value)
+              _item = cloneItem
+            }
+          } else {
+            if (cloneItem['validate'].length) {
+              let requireRule = cloneItem['validate'][0]
+              requireRule = dSet(requireRule, rightRule.validateTargetProps, rightRule.value)
+              cloneItem['validate'][0] = requireRule
+              _item = cloneItem
+            } else {
+              /// 
+              cloneItem['validate'].push({
+                required: false,
+                message: '',
+                trigger: 'blur',
+                [rightRule.validateTargetProps]: rightRule.value
+              })
+              _item = cloneItem
+            }
+          }
+          mainFapi.updateRule(target_field, _item)
+          mainFapi.refresh()
+        } else {
+          _item = dSet(cloneItem, rightRule.target, rightRule.value)
+          mainFapi.updateRule(target_field, _item)
+        }
+        console.log(mainFapi.getRule(target_field), 'target');
+        
       })
     })
     watch(() => props.activeModelWithConfigItem, (v) => {

@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-03 12:16:05
+ * @LastEditTime  : 2021-02-03 18:41:54
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -102,7 +102,7 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
   const { fcd_origin_item } = configInstance
   const { _fc_cache_item } = configInstance
   const { type, field, name } = fcd_origin_item
-  let commonValidateRules = this.configAllTypeJson['common-validate-rules']
+  let commonValidateRules = cloneDeep(this.configAllTypeJson['common-validate-rules'])
   // const commonRulesLast = commonValidateRules.splice(-1)
   // commonValidateRules = [commonValidateRules, commonRulesLast]
   /// 布局组件要可以设置底部的el-col
@@ -111,7 +111,6 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
   const _field = field || name
   if (_fc_cache_item.design.type === 'form') {
     commonValidateRules = _addField(commonValidateRules, _field)
-    console.log(commonValidateRules)
   }
   if (cloneConfigJsonArray.length) {
     /// TODO: 抽逻辑

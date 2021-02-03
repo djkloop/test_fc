@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-03 18:32:49
+ * @LastEditTime  : 2021-02-03 18:41:34
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -76,7 +76,6 @@ export default {
             }
           }
           mainFapi.updateRule(target_field, _item)
-          mainFapi.validateField(target_field)
         } else {
           _item = dSet(cloneItem, rightRule.target, rightRule.value)
           mainFapi.updateRule(target_field, _item)

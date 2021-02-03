@@ -19,7 +19,8 @@
         "type": "select",
         "title": "触发方式",
         "target": "validate",
-        "validateTargetProps": "trigger"
+        "validateTargetProps": "trigger",
+        "value": "blur"
       },
       {
           "type": "group",

@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2021-02-02 18:27:05
+ * @LastEditTime  : 2021-02-03 18:21:43
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -38,7 +38,7 @@ export const useStateWithNav = reactive({
             label: "el-switch",
             lib_type: "switch",
             attrs: {
-                readonly: true,
+                readonly: false,
             },
             /// 每个组件的设计相关字段
             design: {

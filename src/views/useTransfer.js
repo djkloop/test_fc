@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:02:32
- * @LastEditTime  : 2021-02-03 11:12:33
+ * @LastEditTime  : 2021-02-03 18:23:18
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -23,6 +23,14 @@ export const useTransferInput = (item) => {
   item["title"] = onlyField;
   item["id"] = onlyField;
   item['validate'] = [];
+  item['on'] = {
+    'blur': () => {
+      console.log('____')
+    },
+    'focus': () => {
+      console.log('__foc')
+    }
+  }
 };
 
 /// 抹平左侧列表到form-create的switch规则

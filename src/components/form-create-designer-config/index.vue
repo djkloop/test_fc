@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors  : Eug
- * @LastEditTime : 2021-02-03 17:53:44
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-02-03 18:32:49
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/components/form-create-designer-config/index.vue
+ * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
 <template>
   <form-create v-model="fApi" :rule="rules" :option="options" />
@@ -65,7 +65,7 @@ export default {
               cloneItem['validate'][0] = requireRule
               _item = cloneItem
             } else {
-              /// 
+              ///
               cloneItem['validate'].push({
                 required: false,
                 message: '',
@@ -75,14 +75,14 @@ export default {
               _item = cloneItem
             }
           }
-          mainFapi.updateValidate(target_field, _item.validate)
-          // mainFapi.sync(target_field)
+          mainFapi.updateRule(target_field, _item)
+          mainFapi.validateField(target_field)
         } else {
           _item = dSet(cloneItem, rightRule.target, rightRule.value)
           mainFapi.updateRule(target_field, _item)
         }
         console.log(mainFapi.getRule(target_field), 'target');
-        
+
       })
     })
     watch(() => props.activeModelWithConfigItem, (v) => {

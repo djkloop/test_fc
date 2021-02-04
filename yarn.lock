@@ -836,10 +836,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@djkloop/fffff_pppp@0.0.9":
-  version "0.0.9"
-  resolved "https://registry.npm.taobao.org/@djkloop/fffff_pppp/download/@djkloop/fffff_pppp-0.0.9.tgz#06627e1fc7e0f826cc1bb43dd3533a67cfebed12"
-  integrity sha1-BmJ+H8fg+CbMG7Q901M6Z8/r7RI=
+"@djkloop/fffff_pppp@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@djkloop/fffff_pppp/-/fffff_pppp-0.1.2.tgz#d4b91ffa4c29e5db9da13e98fa6fa84be6590abc"
+  integrity sha512-qzlupBbsW4sg3v0qNZ4nR+EzLzsfyeIxvbIWHnYhYpTbK8qH0MN52qWIx2QKK8RVUV8bYHsYomj5Mf2NWG8tVw==
 
 "@hapi/address@2.x.x":
   version "2.1.4"

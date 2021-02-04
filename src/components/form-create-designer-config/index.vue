@@ -1,10 +1,10 @@
 <!--
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
- * @LastEditors  : Eug
- * @LastEditTime : 2021-02-04 17:41:29
+ * @LastEditors   : djkloop
+ * @LastEditTime  : 2021-02-04 19:19:44
  * @Description   : 头部注释
- * @FilePath     : /test_fc/src/components/form-create-designer-config/index.vue
+ * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
 <template>
   <form-create v-model="fApi" :rule="rules" :option="options" />
@@ -75,10 +75,13 @@ export default {
               _item = cloneItem
             }
           }
-          mainFapi.nextRefresh(() => {
+
             mainFapi.updateRule(target_field, _item)
-            console.log('nextRefresh');
-          })
+            mainFapi.refreshValidate()
+
+            // mainFapi.updateValidate(target_field, _item.validate)
+            console.log(mainFapi)
+
         } else {
           _item = dSet(cloneItem, rightRule.target, rightRule.value)
           mainFapi.updateRule(target_field, _item)

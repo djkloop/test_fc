@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-04 19:19:44
+ * @LastEditTime  : 2021-02-05 11:01:47
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { onMounted, toRefs, watch } from '@vue/composition-api'
+import { nextTick, onMounted, toRefs, watch } from '@vue/composition-api'
 import { set as dSet } from 'dot-values2'
 import { cloneDeep } from 'lodash'
 import {
@@ -77,7 +77,9 @@ export default {
           }
 
             mainFapi.updateRule(target_field, _item)
-            mainFapi.refreshValidate()
+            nextTick(() => {
+              mainFapi.refreshValidate()
+            })
 
             // mainFapi.updateValidate(target_field, _item.validate)
             console.log(mainFapi)

@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-03 18:41:54
+ * @LastEditTime  : 2021-02-05 12:26:06
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -234,8 +234,9 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
         } else {
           /// 如果是item 需要去找全局的对象里面找到对应的key
           const isFormItem = Reflect.has(obj, 'field')
-          if (isFormItem) {
+          if (key === 'type' && isFormItem) {
             _setFieldItem(isFormItem, obj, this)
+            console.log(obj, ' ___', this.configItems)
           } else if(key === 'type' && obj.type === 'el-row') {
             _setFieldItem(false, obj, this)
           } else if(key === 'design' && obj.design && obj.design.type === 'form') {

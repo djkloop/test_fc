@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-02-02 18:29:01
+ * @LastEditTime  : 2021-02-05 15:22:33
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -73,7 +73,7 @@ const _useClickCopy = () => {
     useStateWithFormCreate.fApi.append(copyItem, useStateWithPage.activeItem.name)
     useStateWithPage.activeItem = copyItem
     const _item = useStateWithFormCreate.fApi.getRule(copyItem.name)
-    useSetActiveItem(_item)
+    useSetActiveItem(_item, true)
 }
 
 /// TODO: 重构复制嵌套逻辑
@@ -200,7 +200,7 @@ const _useSetLayoutActiveItem = item => {
 
 
 /// 当前页面激活的item
-export const useSetActiveItem = (item) => {
+export const useSetActiveItem = (item, isCopy) => {
     /// 删除上一个激活的activeItem类名
     _useClearActiveClass()
 
@@ -214,7 +214,8 @@ export const useSetActiveItem = (item) => {
     /// 设置当前激活的item
     useStateWithPage.activeItem = item
     /// 去总的type json表取对应的item所对应的类型
-    const activeRightConfigJson = createConfigJsonItemFactory(item)
+    const activeRightConfigJson = createConfigJsonItemFactory(item, isCopy)
+    console.log(JSON.stringify(activeRightConfigJson.rightAllRules[activeRightConfigJson.field]), ' active')
     useStateWithPage.activeModelWithConfigItem = activeRightConfigJson
 }
 
@@ -318,14 +319,10 @@ export const useNavClickCloneItem = (item) => {
     const _cloneItem = useNavCloneItem(item)
     const cloneItem = _useCloneItem(_cloneItem)
     if (!useStateWithPage.activeItem) {
-        console.log('act');
-
         useStateWithDraggables.mainList.push(cloneItem)
     } else {
         /// 否则就在当前激活的activeItem后面添加
         useStateWithFormCreate.fApi.append(cloneItem, useStateWithPage.activeItem.name)
-        console.log('here');
-
     }
     /// 保证动画执行正确
     setTimeout(() => {

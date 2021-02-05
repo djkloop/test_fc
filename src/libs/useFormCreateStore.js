@@ -2,7 +2,7 @@
  * @Author       : djkloop
  * @Date         : 2021-01-09 14:48:21
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-05 12:26:06
+ * @LastEditTime  : 2021-02-05 15:23:19
  * @Description  : 头部注释
  * @FilePath      : /test_fc/src/libs/useFormCreateStore.js
  */
@@ -236,7 +236,6 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
           const isFormItem = Reflect.has(obj, 'field')
           if (key === 'type' && isFormItem) {
             _setFieldItem(isFormItem, obj, this)
-            console.log(obj, ' ___', this.configItems)
           } else if(key === 'type' && obj.type === 'el-row') {
             _setFieldItem(false, obj, this)
           } else if(key === 'design' && obj.design && obj.design.type === 'form') {
@@ -273,25 +272,32 @@ Mediator.prototype.__getFieldWithCopy = function (item) {
 
 const SingleMediatorInstance = (function() {
   var instance
-  return function(item) {
+  return function(item, isCopy) {
     if (!instance) {
       instance = new Mediator()
       if (item) {
         return instance.createModelWithConfigItem(item)
       }
     } else if(item) {
-      return instance.createModelWithConfigItem(item)
+      if (isCopy) {
+        return {
+          field: item.fcd_origin_item.field,
+          rightAllRules: instance.configItems
+        }
+      } else {
+        return instance.createModelWithConfigItem(item)
+      }
     }
     return instance
   }
 })()
 
 /// 通过中介者单例创建每个item
-export const createConfigJsonItemFactory = item => {
+export const createConfigJsonItemFactory = (item, isCopy = false) => {
   /// 去创建一个实例
   const configJsonitemInstance = new ConfigJsonItem(item)
   if (configJsonitemInstance.field || configJsonitemInstance.name) {
-    return SingleMediatorInstance(configJsonitemInstance)
+    return SingleMediatorInstance(configJsonitemInstance, isCopy)
   } else {
     errorCodeFunc(1000, '当前item缺少name或field')
     return null

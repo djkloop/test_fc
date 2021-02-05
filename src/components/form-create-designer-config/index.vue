@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-05 11:01:47
+ * @LastEditTime  : 2021-02-05 15:04:33
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -96,6 +96,7 @@ export default {
     })
     watch(() => props.activeModelWithConfigItem, (v) => {
       if (v.field) {
+        console.log(JSON.stringify(v.rightAllRules[v.field]), ' watch')
         useStateWithFormCreate.rules = v.rightAllRules[v.field]
       }
     }, {

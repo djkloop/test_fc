@@ -111,6 +111,8 @@ Mediator.prototype.createModelWithConfigItem = function (configInstance) {
   const _field = field || name
   if (_fc_cache_item.design.type === 'form') {
     commonValidateRules = _addField(commonValidateRules, _field)
+  } else {
+    commonValidateRules = []
   }
   if (cloneConfigJsonArray.length) {
     /// TODO: 抽逻辑
@@ -279,7 +281,7 @@ const SingleMediatorInstance = (function() {
         return instance.createModelWithConfigItem(item)
       }
     } else if(item) {
-      if (isCopy) {
+      if (isCopy || instance.configItems[item.fcd_origin_item.field] && instance.configItems[item.fcd_origin_item.field].length) {
         return {
           field: item.fcd_origin_item.field,
           rightAllRules: instance.configItems

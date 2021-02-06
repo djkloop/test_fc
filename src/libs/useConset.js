@@ -1,7 +1,7 @@
 /* 
  * @Author       : Eug
  * @Date         : 2021-01-12 17:57:59
- * @LastEditTime : 2021-02-03 17:04:48
+ * @LastEditTime : 2021-02-05 16:53:50
  * @LastEditors  : Eug
  * @Descripttion : Descripttion
  * @FilePath     : /test_fc/src/libs/useConset.js
@@ -32,4 +32,8 @@ export const triggerEventOptions = [
     value: 'change',
     label: 'change'
   }
+]
+
+export const effectProps = [
+  "attrs.maxLength"
 ]

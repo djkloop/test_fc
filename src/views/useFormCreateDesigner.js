@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:31:58
- * @LastEditTime  : 2021-02-05 15:22:33
+ * @LastEditTime  : 2021-02-06 11:28:59
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -215,7 +215,6 @@ export const useSetActiveItem = (item, isCopy) => {
     useStateWithPage.activeItem = item
     /// 去总的type json表取对应的item所对应的类型
     const activeRightConfigJson = createConfigJsonItemFactory(item, isCopy)
-    console.log(JSON.stringify(activeRightConfigJson.rightAllRules[activeRightConfigJson.field]), ' active')
     useStateWithPage.activeModelWithConfigItem = activeRightConfigJson
 }
 

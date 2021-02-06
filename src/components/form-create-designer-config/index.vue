@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:05:35
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-05 15:04:33
+ * @LastEditTime  : 2021-02-06 11:27:39
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/index.vue
 -->
@@ -11,9 +11,8 @@
 </template>
 
 <script>
-import { nextTick, onMounted, toRefs, watch } from '@vue/composition-api'
-import { set as dSet } from 'dot-values2'
-import { cloneDeep } from 'lodash'
+import { onMounted, toRefs, watch } from '@vue/composition-api'
+import { useFilter } from './useFormCreateDesignerConfig'
 import {
   useStateWithFormCreate
 } from './useState'
@@ -31,72 +30,11 @@ export default {
   setup(props) {
     onMounted(() => {
       const { mainFapi } = props
-      const { fApi } = useStateWithFormCreate
-      fApi.on('change', e => {
-        /// 先获取到主区域的item的key
-        const { target_field } = fApi.getRule(e)
-        /// 主区域的item
-        let item = mainFapi.getRule(target_field)
-        const cloneItem = cloneDeep(item)
-        console.log(fApi.getRule(e), cloneItem)
-        console.log(e);
-        const rightRule = fApi.getRule(e)
-        let _item
-        if (rightRule.target === 'validate') {
-          if (rightRule.type === 'group') {
-            console.log('///',rightRule, cloneItem['validate']);
-            if (cloneItem['validate'].length) {
-              const _requiredRule = cloneItem['validate'][0]
-               cloneItem['validate'] = [_requiredRule, ...rightRule.value]
-              _item = cloneItem
-            } else {
-               cloneItem['validate'].push({
-                required: false,
-                message: '',
-                trigger: 'blur'
-              })
-              cloneItem['validate'].push(...rightRule.value)
-              _item = cloneItem
-            }
-          } else {
-            if (cloneItem['validate'].length) {
-              let requireRule = cloneItem['validate'][0]
-              requireRule = dSet(requireRule, rightRule.validateTargetProps, rightRule.value)
-              cloneItem['validate'][0] = requireRule
-              _item = cloneItem
-            } else {
-              ///
-              cloneItem['validate'].push({
-                required: false,
-                message: '',
-                trigger: 'blur',
-                [rightRule.validateTargetProps]: rightRule.value
-              })
-              _item = cloneItem
-            }
-          }
-
-            mainFapi.updateRule(target_field, _item)
-            nextTick(() => {
-              mainFapi.refreshValidate()
-            })
-
-            // mainFapi.updateValidate(target_field, _item.validate)
-            console.log(mainFapi)
-
-        } else {
-          _item = dSet(cloneItem, rightRule.target, rightRule.value)
-          mainFapi.updateRule(target_field, _item)
-        }
-        setTimeout(() => {
-          console.log(mainFapi.getRule(target_field), 'target');
-        },1000)
-
-      })
+      const { fApi: toolsFapi } = useStateWithFormCreate
+      toolsFapi.on('change', (e) => useFilter(e, mainFapi, toolsFapi))
     })
     watch(() => props.activeModelWithConfigItem, (v) => {
       if (v.field) {
-        console.log(JSON.stringify(v.rightAllRules[v.field]), ' watch')
         useStateWithFormCreate.rules = v.rightAllRules[v.field]
       }
     }, {

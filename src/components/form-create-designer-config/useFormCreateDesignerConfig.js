@@ -2,7 +2,7 @@
  * @Author        : djkloop
  * @Date          : 2020-12-30 18:15:20
  * @LastEditors   : djkloop
- * @LastEditTime  : 2021-02-06 12:21:18
+ * @LastEditTime  : 2021-02-06 12:28:49
  * @Description   : 头部注释
  * @FilePath      : /test_fc/src/components/form-create-designer-config/useFormCreateDesignerConfig.js
  */
@@ -53,7 +53,6 @@ const _methods = {
   value(toolsFapi, rightRule) {
     const {  rules: rightRules } = useStateWithFormCreate
     const fcd_link_item = rightRules.find(rule => rule.target === rightRule.fcd_link)
-    console.log(fcd_link_item)
     const _item = dSet(fcd_link_item, rightRule.target, rightRule.value)
     toolsFapi.updateRule(fcd_link_item.field, _item)
   }
@@ -73,11 +72,12 @@ const _methods = {
   if ((methodskeys.includes(rightRule.target) && isLinkTarget) || isLinkTarget) {
     if (isLinkTarget) {
       _methods[rightRule.fcd_link](toolsFapi, rightRule)
+      const _item = dSet(cloneItem, rightRule.target, rightRule.value)
+      mainFapi.updateRule(target_field, _item)
     } else {
       _methods[rightRule.target](mainFapi, rightRule, cloneItem, target_field)
     }
   } else {
-    console.log('___')
     const _item = dSet(cloneItem, rightRule.target, rightRule.value)
     mainFapi.updateRule(target_field, _item)
   }

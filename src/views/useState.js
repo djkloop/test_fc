@@ -1,7 +1,7 @@
 /*
  * @Author: yeyuhang
  * @Date: 2020-12-29 15:19:29
- * @LastEditTime  : 2021-02-03 18:21:43
+ * @LastEditTime  : 2021-02-06 12:27:26
  * @LastEditors   : djkloop
  * @Descripttion: 头部注释
  */
@@ -24,7 +24,7 @@ export const useStateWithNav = reactive({
             label: "el-input",
             lib_type: "input",
             attrs: {
-                readonly: true,
+                readonly: false,
                 placeholder: 'good'
             },
             /// 每个组件的设计相关字段

@@ -1,10 +1,10 @@
-/* 
+/*
  * @Author       : Eug
  * @Date         : 2021-02-05 15:48:41
- * @LastEditTime : 2021-02-05 19:34:02
- * @LastEditors  : Eug
+ * @LastEditTime  : 2021-02-06 12:34:26
+ * @LastEditors   : djkloop
  * @Descripttion : Descripttion
- * @FilePath     : /test_fc/src/mock/input.js
+ * @FilePath      : /test_fc/src/mock/input.js
  */
 export default {
     "el-input": [
@@ -42,7 +42,7 @@ export default {
         {
             "type": "radio",
             "title": "尺寸",
-            "value": "",
+            "value": "small",
             "target": "attrs.size",
             "options": [
                 { "value": "medium", "label": "medium" },
